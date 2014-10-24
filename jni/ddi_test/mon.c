@@ -7,6 +7,13 @@
  *  License: LGPL v2.1
  *
  */
+/*
+ * Aitk
+ *
+ * t0kt0ckus
+ * C) 2014
+ *
+ */
 
 #define _GNU_SOURCE
 #include <stdio.h>

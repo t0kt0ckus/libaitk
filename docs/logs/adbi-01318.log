@@ -1,0 +1,18 @@
+adbi_init(1318)
+hooking:   epoll_wait = 0x4005e900 ARM using 0x619e986c
+->hook_cacheflush(0x4005e900, 0x4005e914)
+<-hook_cacheflush()
+->hook_precall()
+->hook_cacheflush(0x4005e900, 0x4005e914)
+<-hook_cacheflush()
+<-hook_precall()
+->hook_postcall()
+->hook_cacheflush(0x4005e900, 0x4005e914)
+<-hook_cacheflush()
+<-hook_postcall()
+epoll_wait() called
+removing hook for epoll_wait() on next event
+->hook_precall()
+->hook_cacheflush(0x4005e900, 0x4005e914)
+<-hook_cacheflush()
+<-hook_precall()

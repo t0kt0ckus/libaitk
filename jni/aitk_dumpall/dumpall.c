@@ -1,10 +1,8 @@
 /*
- *  Collin's Dynamic Dalvik Instrumentation Toolkit for Android
- *  Collin Mulliner <collin[at]mulliner.org>
+ * Aitk
  *
- *  (c) 2012,2013
- *
- *  License: LGPL v2.1
+ * t0kt0ckus
+ * C) 2014
  *
  */
 

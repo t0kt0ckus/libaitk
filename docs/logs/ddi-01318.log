@@ -1,0 +1,32 @@
+ddi_init(1318)
+dvm_hand = 0x41538128
+dvm_dalvik_system_DexFile = 0x4161cb08
+dvm_java_lang_Class = 0x4161ce38
+_Z13dvmThreadSelfv = 0x415b7899
+_Z32dvmCreateStringFromCstrAndLengthPKcj = 0x415b9517
+_Z23dvmGetSystemClassLoaderv = 0x415cfc61
+_Z21dvmIsClassInitializedPK11ClassObject = 0x415ac703
+dvmInitClass = 0x415cf889
+_Z36dvmFindVirtualMethodHierByDescriptorPK11ClassObjectPKcS3_ = 0x415d00ed
+_Z31dvmFindDirectMethodByDescriptorPK11ClassObjectPKcS3_ = 0x415d0181
+_Z17dvmIsStaticMethodPK6Method = 0x415ac4d3
+dvmAllocObject = 0x415b9785
+_Z14dvmCallMethodVP6ThreadPK6MethodP6ObjectbP6JValueSt9__va_list = 0x415c4399
+_Z14dvmCallMethodAP6ThreadPK6MethodP6ObjectbP6JValuePK6jvalue = 0x415c421d
+_Z22dvmAddToReferenceTableP14ReferenceTableP6Object = 0x415b56c9
+_Z16dvmSetNativeFuncP6MethodPFvPKjP6JValuePKS_P6ThreadEPKt = 0x415ce1db
+_Z15dvmUseJNIBridgeP6MethodPv = 0x415b1555
+_Z20dvmDecodeIndirectRefP6ThreadP8_jobject = 0x415ae2f5
+_Z21dvmLinearSetReadWriteP6ObjectPv = 0x415b2977
+_Z22dvmGetCurrentJNIMethodv = 0x415b15f9
+_Z20dvmFindInstanceFieldPK11ClassObjectPKcS3_ = 0x415cff59
+_Z16dvmCallJNIMethodPKjP6JValuePK6MethodP6Thread = 0x415b1d5d
+_Z17dvmDumpAllClassesi = 0x415ce22d
+_Z12dvmDumpClassPK11ClassObjecti = 0x415ce229
+_Z18dvmFindLoadedClassPKc = 0x415ce1ed
+_Z16dvmHashTableLockP9HashTable = 0x0
+_Z18dvmHashTableUnlockP9HashTable = 0x0
+_Z14dvmHashForeachP9HashTablePFiPvS1_ES1_ = 0x415a90e5
+_Z13dvmInstanceofPK11ClassObjectS1_ = 0x0
+gDvm = 0x41624e18
+aitk_dumpall(): ... completed (1 s)
