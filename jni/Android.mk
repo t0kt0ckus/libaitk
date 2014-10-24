@@ -74,6 +74,16 @@ LOCAL_STATIC_LIBRARIES := adbi ddi
 LOCAL_SHARED_LIBRARIES := libdvl libdl
 include $(BUILD_SHARED_LIBRARY)
 
+# aitk_dumpall2: list all dvm-loaded classes (pthread version)
+#
+include $(CLEAR_VARS)
+LOCAL_MODULE     := aitk_dumpall2
+AITK_SRC_PATH := $(LOCAL_PATH)/aitk_dumpall2
+LOCAL_SRC_FILES  := $(AITK_SRC_PATH)/dumpall_arm.c.arm $(AITK_SRC_PATH)/dumpall.c
+LOCAL_STATIC_LIBRARIES := adbi ddi
+LOCAL_SHARED_LIBRARIES := libdvl libdl
+include $(BUILD_SHARED_LIBRARY)
+
 # aitk_dumpclass: dump info about a dvm-loaded class
 #
 include $(CLEAR_VARS)
@@ -83,4 +93,5 @@ LOCAL_SRC_FILES  := $(AITK_SRC_PATH)/dumpclass_arm.c.arm $(AITK_SRC_PATH)/dumpcl
 LOCAL_STATIC_LIBRARIES := adbi ddi
 LOCAL_SHARED_LIBRARIES := libdvl libdl
 include $(BUILD_SHARED_LIBRARY)
+
 

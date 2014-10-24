@@ -26,15 +26,13 @@
 #include "../ddi/ddi_log.h"
 #include "../ddi/ddi.h"
 
-#define DUMP_CLASS_NAME "Ljava/lang/String;"
-
 static struct hook_t eph;
 static struct dexstuff_t d;
 static int counter;
 
 static int dvkdump_log_init();
-static int aitk_dumpclass();
-static void *aitk_dumpclass_fn(void * targs);
+static int aitk_dumpall();
+static void *aitk_dumpall2(void * targs);
 
 // helper function
 void printString(JNIEnv *env, jobject str, char *l)
@@ -78,7 +76,7 @@ int my_epoll_wait(int epfd,
         pthread_attr_t attrs;
         pthread_attr_init(&attrs);
         pthread_attr_setdetachstate(&attrs, PTHREAD_CREATE_DETACHED);
-        pthread_create(&logcat_pth, &attrs, aitk_dumpclass_fn, DUMP_CLASS_NAME);  
+        pthread_create(&logcat_pth, &attrs, aitk_dumpall2, NULL);  
 	    
 		if (!counter) 
 			adbi_log_fmt("removing hook for epoll_wait() on next event\n");
@@ -101,8 +99,8 @@ void init_so_ddi_test(void)
 
 static FILE *dvkdump_logfile_ptr = NULL;
 
-static const char *DVKDUMP_LOG_FMT = "/data/local/tmp/aitk/logs/dumpclass-%05d.log";
-static const int DVKDUMP_LOG_WLEN = 40 + 5;
+static const char *DVKDUMP_LOG_FMT = "/data/local/tmp/aitk/logs/dumpall-%05d.log";
+static const int DVKDUMP_LOG_WLEN = 38 + 5;
 
 static char * const LOGCAT_SH_ENV[] = {
             "PATH=/sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin", NULL
@@ -117,7 +115,7 @@ int dvkdump_log_init()
     if ((logpath = malloc(sizeof(char) * logpath_len)))
     {
         snprintf(logpath, logpath_len, DVKDUMP_LOG_FMT, getpid());
-        if ((dvkdump_logfile_ptr = fopen(logpath, "a+")))
+        if ((dvkdump_logfile_ptr = fopen(logpath, "w")))
         {
             chmod(logpath, 0644);
             last_err = 0;
@@ -130,16 +128,16 @@ int dvkdump_log_init()
     return last_err;
 }
 
-void *aitk_dumpclass_fn(void * targs)
+void *aitk_dumpall2(void * targs)
 {
-    aitk_dumpclass((char *) targs);
+    aitk_dumpall();
     pthread_exit(NULL);
 }
 
-int aitk_dumpclass(char *clname)
+int aitk_dumpall()
 {
     time_t t_start = time(NULL);
-    ddi_log_fmt("aitk_dumpclass(): ...");
+    ddi_log_fmt("aitk_dumpall(): ...");
     
     if ((! dvkdump_logfile_ptr) && (dvkdump_log_init())) {
         ddi_log_fmt("Failed to init dump file, aborting !\n");
@@ -162,7 +160,7 @@ int aitk_dumpclass(char *clname)
         execve(logcat_binary, params, LOGCAT_SH_ENV);
     }
     else {
-	    dalvik_dump_class(&d, clname);
+	    dalvik_dump_class(&d, "");
 
         time_t last_write, tnow;
         struct stat dump_stat;
