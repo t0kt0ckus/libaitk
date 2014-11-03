@@ -26,13 +26,23 @@ LOCAL_SRC_FILES := $(HIJACK_SRC_PATH)/hijack.c
 LOCAL_ARM_MODE  := arm
 include $(BUILD_EXECUTABLE)
 
+# libyal: yet another logger ...
+#
+include $(CLEAR_VARS)
+LOCAL_MODULE     := yal
+LIBYAL_SRC_PATH := $(LOCAL_PATH)/yal
+LOCAL_SRC_FILES  := $(LIBYAL_SRC_PATH)/yal.c
+LOCAL_ARM_MODE := arm
+include $(BUILD_STATIC_LIBRARY)
+
 # libadbi: crmulliner's library "fork" [https://github.com/crmulliner/adbi/instruments]
 #
 include $(CLEAR_VARS)
 LOCAL_MODULE     := adbi
 LIBADBI_SRC_PATH := $(LOCAL_PATH)/adbi
-LOCAL_SRC_FILES  := $(LIBADBI_SRC_PATH)/adbi.c $(LIBADBI_SRC_PATH)/hook.c $(LIBADBI_SRC_PATH)/util.c $(LIBADBI_SRC_PATH)/adbi_log.c
+LOCAL_SRC_FILES  := $(LIBADBI_SRC_PATH)/adbi.c $(LIBADBI_SRC_PATH)/hook.c $(LIBADBI_SRC_PATH)/util.c
 LOCAL_ARM_MODE := arm
+LOCAL_STATIC_LIBRARIES := yal
 include $(BUILD_STATIC_LIBRARY)
 
 # libadbi_test: attemmpts to hook epoll_wait() to test libadbi
@@ -49,7 +59,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE     := ddi
 LIBDDI_SRC_PATH := $(LOCAL_PATH)/ddi
-LOCAL_SRC_FILES  := $(LIBDDI_SRC_PATH)/dexstuff.c.arm $(LIBDDI_SRC_PATH)/dalvik_hook.c $(LIBDDI_SRC_PATH)/ddi_log.c $(LIBDDI_SRC_PATH)/ddi.c
+LOCAL_SRC_FILES  := $(LIBDDI_SRC_PATH)/dexstuff.c.arm $(LIBDDI_SRC_PATH)/dalvik_hook.c $(LIBDDI_SRC_PATH)/ddi.c
 LOCAL_STATIC_LIBRARIES := adbi
 LOCAL_SHARED_LIBRARIES := libdvl libdl
 include $(BUILD_STATIC_LIBRARY)
@@ -64,21 +74,11 @@ LOCAL_STATIC_LIBRARIES := adbi ddi
 LOCAL_SHARED_LIBRARIES := libdvl libdl
 include $(BUILD_SHARED_LIBRARY)
 
-# aitk_dumpall: list all dvm-loaded classes
+# libaitk_dumpall: list all dvm-loaded classes (pthread version)
 #
 include $(CLEAR_VARS)
 LOCAL_MODULE     := aitk_dumpall
 AITK_SRC_PATH := $(LOCAL_PATH)/aitk_dumpall
-LOCAL_SRC_FILES  := $(AITK_SRC_PATH)/dumpall_arm.c.arm $(AITK_SRC_PATH)/dumpall.c
-LOCAL_STATIC_LIBRARIES := adbi ddi
-LOCAL_SHARED_LIBRARIES := libdvl libdl
-include $(BUILD_SHARED_LIBRARY)
-
-# aitk_dumpall2: list all dvm-loaded classes (pthread version)
-#
-include $(CLEAR_VARS)
-LOCAL_MODULE     := aitk_dumpall2
-AITK_SRC_PATH := $(LOCAL_PATH)/aitk_dumpall2
 LOCAL_SRC_FILES  := $(AITK_SRC_PATH)/dumpall_arm.c.arm $(AITK_SRC_PATH)/dumpall.c
 LOCAL_STATIC_LIBRARIES := adbi ddi
 LOCAL_SHARED_LIBRARIES := libdvl libdl

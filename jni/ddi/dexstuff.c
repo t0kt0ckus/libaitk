@@ -7,27 +7,33 @@
  *  License: LGPL v2.1
  *
  */
+/*
+ * Aitk
+ *
+ * t0kt0ckus
+ * (C) 2014
+ *
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <dlfcn.h>
 #include <stdarg.h>
 
-#include "dexstuff.h"
-#include "ddi_log.h"
+#include "ddi.h"
 
 
 static void* mydlsym(void *hand, const char *name)
 {
 	void* ret = dlsym(hand, name);
-	ddi_log_fmt("%s = 0x%x\n", name, ret);
+	ddi_log_printf("%s = 0x%x\n", name, ret);
 	return ret;
 }
 
 void dexstuff_resolv_dvm(struct dexstuff_t *d)
 {
 	d->dvm_hand = dlopen("libdvm.so", RTLD_NOW);
-	ddi_log_fmt("dvm_hand = 0x%x\n", d->dvm_hand);
+	ddi_log_printf("dvm_hand = 0x%x\n", d->dvm_hand);
 	
 	if (d->dvm_hand) {
 		d->dvm_dalvik_system_DexFile = (DalvikNativeMethod*) mydlsym(d->dvm_hand, "dvm_dalvik_system_DexFile");
@@ -94,13 +100,13 @@ int dexstuff_loaddex(struct dexstuff_t *d, char *path)
 	jvalue pResult;
 	jint result;
 	
-	ddi_log_fmt("dexstuff_loaddex, path = 0x%x\n", path);
+	ddi_log_printf("dexstuff_loaddex, path = 0x%x\n", path);
 	void *jpath = d->dvmStringFromCStr_fnPtr(path, strlen(path), ALLOC_DEFAULT);
 	u4 args[2] = { (u4)jpath, (u4)NULL };
 	
 	d->dvm_dalvik_system_DexFile[0].fnPtr(args, &pResult);
 	result = (jint) pResult.l;
-	ddi_log_fmt("cookie = 0x%x\n", pResult.l);
+	ddi_log_printf("cookie = 0x%x\n", pResult.l);
 
 	return result;
 }
@@ -110,21 +116,21 @@ void* dexstuff_defineclass(struct dexstuff_t *d, char *name, int cookie)
 	u4 *nameObj = (u4*) name;
 	jvalue pResult;
 	
-	ddi_log_fmt("dexstuff_defineclass: %s using %x\n", name, cookie);
+	ddi_log_printf("dexstuff_defineclass: %s using %x\n", name, cookie);
 	
 	void* cl = d->dvmGetSystemClassLoader_fnPtr();
 	Method *m = d->dvmGetCurrentJNIMethod_fnPtr();
-	ddi_log_fmt("sys classloader = 0x%x\n", cl);
-	ddi_log_fmt("cur m classloader = 0x%x\n", m->clazz->classLoader);
+	ddi_log_printf("sys classloader = 0x%x\n", cl);
+	ddi_log_printf("cur m classloader = 0x%x\n", m->clazz->classLoader);
 	
 	void *jname = d->dvmStringFromCStr_fnPtr(name, strlen(name), ALLOC_DEFAULT);
-	//ddi_log_fmt("called string...\n")
+	//ddi_log_printf("called string...\n")
 	
 	u4 args[3] = { (u4)jname, (u4) m->clazz->classLoader, (u4) cookie };
 	d->dvm_dalvik_system_DexFile[3].fnPtr( args , &pResult );
 
 	jobject *ret = pResult.l;
-	ddi_log_fmt("class = 0x%x\n", ret);
+	ddi_log_printf("class = 0x%x\n", ret);
 	return ret;
 }
 

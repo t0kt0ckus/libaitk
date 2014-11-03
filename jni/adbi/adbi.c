@@ -9,16 +9,18 @@
  */
 #include <unistd.h>
 #include <sys/types.h>
+#include <time.h>
 
 #include "adbi.h"
-#include "adbi_log.h"
 
 void adbi_init()
 {
     pid_t pid = getpid();
-    adbi_log_init(pid);
+    adbi_logger = yal_log_init(ADBI_LOG_DIR, ADBI, pid);    
 
-    adbi_log_fmt("adbi_init(%d)\n", pid);
+    time_t t0;
+    time(&t0);
+    adbi_log_printf("Starting ADBI (PID: %d): %s\n", pid, ctime(&t0));
 }
 
 

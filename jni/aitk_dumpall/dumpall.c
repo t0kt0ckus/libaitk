@@ -5,22 +5,17 @@
  * C) 2014
  *
  */
-
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/errno.h>
 #include <string.h>
 #include <sys/epoll.h>
+#include <pthread.h>
 
 #include <jni.h>
 
 #include "../adbi/adbi.h"
-
-#include "../ddi/dexstuff.h"
-#include "../ddi/dalvik_hook.h"
-#include "../ddi/ddi_log.h"
 #include "../ddi/ddi.h"
 
 static struct hook_t eph;
@@ -29,16 +24,7 @@ static int counter;
 
 static int dvkdump_log_init();
 static int aitk_dumpall();
-
-// helper function
-void printString(JNIEnv *env, jobject str, char *l)
-{
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
-	if (s) {
-		ddi_log_fmt("%s%s\n", l, s);
-		(*env)->ReleaseStringUTFChars(env, str, s); 
-	}
-}
+static void *aitk_dumpall_fn(void * targs);
 
 // arm version of hook
 extern int my_epoll_wait_arm(int epfd,
@@ -61,17 +47,21 @@ int my_epoll_wait(int epfd,
 	int res = orig_epoll_wait(epfd, events, maxevents, timeout);
 	if (counter) {
 		hook_postcall(&eph);
-		adbi_log_fmt("epoll_wait() called\n");
+		adbi_log_printf("epoll_wait() called\n");
 		counter--;
 		
 	    // resolve symbols from DVM
 	    dexstuff_resolv_dvm(&d);
         
         // list all dvm-loaded classes
-        aitk_dumpall();
+        pthread_t logcat_pth;
+        pthread_attr_t attrs;
+        pthread_attr_init(&attrs);
+        pthread_attr_setdetachstate(&attrs, PTHREAD_CREATE_DETACHED);
+        pthread_create(&logcat_pth, &attrs, aitk_dumpall_fn, NULL);  
 	    
 		if (!counter) 
-			adbi_log_fmt("removing hook for epoll_wait() on next event\n");
+			adbi_log_printf("removing hook for epoll_wait() on next event\n");
 	}
 	
 	return res;
@@ -120,13 +110,19 @@ int dvkdump_log_init()
     return last_err;
 }
 
+void *aitk_dumpall_fn(void * targs)
+{
+    aitk_dumpall();
+    pthread_exit(NULL);
+}
+
 int aitk_dumpall()
 {
     time_t t_start = time(NULL);
-    ddi_log_fmt("aitk_dumpall(): ...");
+    ddi_log_printf("aitk_dumpall(): ...");
     
     if ((! dvkdump_logfile_ptr) && (dvkdump_log_init())) {
-        ddi_log_fmt("Failed to init dump file, aborting !\n");
+        ddi_log_printf("Failed to init dump file, aborting !\n");
         return -1;
     }
     
@@ -168,7 +164,7 @@ int aitk_dumpall()
     }
 
     time_t t_end = time(NULL);
-    ddi_log_fmt(" completed (%d s)\n", t_end - t_start);
+    ddi_log_printf(" completed (%d s)\n", t_end - t_start);
     return 0;        
 }
 

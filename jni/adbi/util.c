@@ -28,7 +28,7 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 
-#include "adbi_log.h"
+#include "adbi.h"
 
 /* memory map for libraries */
 #define MAX_NAME_LEN 256
@@ -127,19 +127,19 @@ static int do_load(int fd, symtab_t symtab)
 	/* elf header */
 	rv = read(fd, &ehdr, sizeof(ehdr));
 	if (0 > rv) {
-		adbi_log_fmt("read\n");
+		adbi_log_printf("read\n");
 		goto out;
 	}
 	if (rv != sizeof(ehdr)) {
-		adbi_log_fmt("elf error 1\n");
+		adbi_log_printf("elf error 1\n");
 		goto out;
 	}
 	if (strncmp(ELFMAG, ehdr.e_ident, SELFMAG)) { /* sanity */
-		adbi_log_fmt("not an elf\n");
+		adbi_log_printf("not an elf\n");
 		goto out;
 	}
 	if (sizeof(Elf32_Shdr) != ehdr.e_shentsize) { /* sanity */
-		adbi_log_fmt("elf error 2\n");
+		adbi_log_printf("elf error 2\n");
 		goto out;
 	}
 
@@ -148,11 +148,11 @@ static int do_load(int fd, symtab_t symtab)
 	shdr = (Elf32_Shdr *) xmalloc(size);
 	rv = my_pread(fd, shdr, size, ehdr.e_shoff);
 	if (0 > rv) {
-		adbi_log_fmt("read\n");
+		adbi_log_printf("read\n");
 		goto out;
 	}
 	if (rv != size) {
-		adbi_log_fmt("elf error 3 %d %d\n", rv, size);
+		adbi_log_printf("elf error 3 %d %d\n", rv, size);
 		goto out;
 	}
 	
@@ -161,11 +161,11 @@ static int do_load(int fd, symtab_t symtab)
 	shstrtab = (char *) xmalloc(size);
 	rv = my_pread(fd, shstrtab, size, shdr[ehdr.e_shstrndx].sh_offset);
 	if (0 > rv) {
-		adbi_log_fmt("read\n");
+		adbi_log_printf("read\n");
 		goto out;
 	}
 	if (rv != size) {
-		adbi_log_fmt("elf error 4 %d %d\n", rv, size);
+		adbi_log_printf("elf error 4 %d %d\n", rv, size);
 		goto out;
 	}
 
@@ -175,42 +175,42 @@ static int do_load(int fd, symtab_t symtab)
 	for (i = 0, p = shdr; i < ehdr.e_shnum; i++, p++)
 		if (SHT_SYMTAB == p->sh_type) {
 			if (symh) {
-				adbi_log_fmt("too many symbol tables\n");
+				adbi_log_printf("too many symbol tables\n");
 				goto out;
 			}
 			symh = p;
 		} else if (SHT_DYNSYM == p->sh_type) {
 			if (dynsymh) {
-				adbi_log_fmt("too many symbol tables\n");
+				adbi_log_printf("too many symbol tables\n");
 				goto out;
 			}
 			dynsymh = p;
 		} else if (SHT_STRTAB == p->sh_type
 			   && !strncmp(shstrtab+p->sh_name, ".strtab", 7)) {
 			if (strh) {
-				adbi_log_fmt("too many string tables\n");
+				adbi_log_printf("too many string tables\n");
 				goto out;
 			}
 			strh = p;
 		} else if (SHT_STRTAB == p->sh_type
 			   && !strncmp(shstrtab+p->sh_name, ".dynstr", 7)) {
 			if (dynstrh) {
-				adbi_log_fmt("too many string tables\n");
+				adbi_log_printf("too many string tables\n");
 				goto out;
 			}
 			dynstrh = p;
 		}
 	/* sanity checks */
 	if ((!dynsymh && dynstrh) || (dynsymh && !dynstrh)) {
-		adbi_log_fmt("bad dynamic symbol table\n");
+		adbi_log_printf("bad dynamic symbol table\n");
 		goto out;
 	}
 	if ((!symh && strh) || (symh && !strh)) {
-		adbi_log_fmt("bad symbol table\n");
+		adbi_log_printf("bad symbol table\n");
 		goto out;
 	}
 	if (!dynsymh && !symh) {
-		adbi_log_fmt("no symbol table\n");
+		adbi_log_printf("no symbol table\n");
 		goto out;
 	}
 
@@ -236,11 +236,11 @@ static symtab_t load_symtab(char *filename)
 
 	fd = open(filename, O_RDONLY);
 	if (0 > fd) {
-		adbi_log_fmt("%s open\n", __func__);
+		adbi_log_printf("%s open\n", __func__);
 		return NULL;
 	}
 	if (0 > do_load(fd, symtab)) {
-		adbi_log_fmt("Error ELF parsing %s\n", filename);
+		adbi_log_printf("Error ELF parsing %s\n", filename);
 		free(symtab);
 		symtab = NULL;
 	}
@@ -411,21 +411,21 @@ int find_name(pid_t pid, char *name, char *libn, unsigned long *addr)
 	symtab_t s;
 
 	if (0 > load_memmap(pid, mm, &nmm)) {
-		adbi_log_fmt("cannot read memory map\n");
+		adbi_log_printf("cannot read memory map\n");
 		return -1;
 	}
 	if (0 > find_libname(libn, libc, sizeof(libc), &libcaddr, mm, nmm)) {
-		adbi_log_fmt("cannot find lib: %s\n", libn);
+		adbi_log_printf("cannot find lib: %s\n", libn);
 		return -1;
 	}
 	//log("lib: >%s<\n", libc)
 	s = load_symtab(libc);
 	if (!s) {
-		adbi_log_fmt("cannot read symbol table\n");
+		adbi_log_printf("cannot read symbol table\n");
 		return -1;
 	}
 	if (0 > lookup_func_sym(s, name, addr)) {
-		adbi_log_fmt("cannot find function: %s\n", name);
+		adbi_log_printf("cannot find function: %s\n", name);
 		return -1;
 	}
 	*addr += libcaddr;
@@ -441,11 +441,11 @@ int find_libbase(pid_t pid, char *libn, unsigned long *addr)
 	symtab_t s;
 
 	if (0 > load_memmap(pid, mm, &nmm)) {
-		adbi_log_fmt("cannot read memory map\n");
+		adbi_log_printf("cannot read memory map\n");
 		return -1;
 	}
 	if (0 > find_libname(libn, libc, sizeof(libc), &libcaddr, mm, nmm)) {
-		adbi_log_fmt("cannot find lib\n");
+		adbi_log_printf("cannot find lib\n");
 		return -1;
 	}
 	*addr = libcaddr;

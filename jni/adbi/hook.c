@@ -30,12 +30,11 @@
 #include <sys/epoll.h>
 
 #include "adbi.h"
-#include "adbi_log.h"
 #include "util.h"
 
 void inline hook_cacheflush(unsigned int begin, unsigned int end)
 {
-    adbi_log_fmt("->hook_cacheflush(0x%x, 0x%x)\n", begin, end);
+    adbi_log_printf("->hook_cacheflush(0x%x, 0x%x)\n", begin, end);
 
 	const int syscall = 0xf0002;
 	__asm __volatile (
@@ -49,26 +48,25 @@ void inline hook_cacheflush(unsigned int begin, unsigned int end)
 		:	"r0", "r1", "r7"
 		);
     
-    adbi_log_fmt("<-hook_cacheflush()\n");
+    adbi_log_printf("<-hook_cacheflush()\n");
 }
 
 int hook_direct(struct hook_t *h, unsigned int addr, void *hookf)
 {
 	int i;
-	adbi_log_fmt("->hook_direct():\n"); 
-	adbi_log_fmt("addr  = %x\n", addr);
-	adbi_log_fmt("hookf = %x\n", hookf);
+	adbi_log_printf("->hook_direct():\n"); 
+	adbi_log_printf("addr  = %x\n", addr);
+	adbi_log_printf("hookf = %x\n", hookf);
 
 	if ((addr % 4 == 0 && (unsigned int)hookf % 4 != 0)
             || (addr % 4 != 0 && (unsigned int)hookf % 4 == 0))
-		adbi_log_fmt("addr 0x%x and hook 0x%x\n don't match!\n",
+		adbi_log_printf("addr 0x%x and hook 0x%x\n don't match!\n",
                 addr, hookf);
 	
-	//log("ARM\n")
 	h->thumb = 0;
 	h->patch = (unsigned int)hookf;
 	h->orig = addr;
-	adbi_log_fmt("orig = %x\n", h->orig);
+	adbi_log_printf("orig = %x\n", h->orig);
 	h->jump[0] = 0xe59ff000; // LDR pc, [pc, #0]
 	h->jump[1] = h->patch;
 	h->jump[2] = h->patch;
@@ -79,7 +77,7 @@ int hook_direct(struct hook_t *h, unsigned int addr, void *hookf)
 	
 	hook_cacheflush((unsigned int)h->orig, (unsigned int)h->orig+sizeof(h->jumpt));
 	
-    adbi_log_fmt("<-hook_direct()\n"); 
+    adbi_log_printf("<-hook_direct()\n"); 
 	return 1;
 }
 
@@ -89,15 +87,15 @@ int hook(struct hook_t *h, int pid, char *libname, char *funcname, void *hook_ar
 	int i;
 
 	if (find_name(pid, funcname, libname, &addr) < 0) {
-		adbi_log_fmt("can't find: %s\n", funcname);
+		adbi_log_printf("can't find: %s\n", funcname);
 		return 0;
 	}
 	
-	adbi_log_fmt("hooking:   %s = 0x%x ", funcname, addr);
+	adbi_log_printf("hooking:   %s = 0x%x ", funcname, addr);
 	strncpy(h->name, funcname, sizeof(h->name)-1);
 
 	if (addr % 4 == 0) {
-		adbi_log_fmt("ARM using 0x%x\n", hook_arm);
+		adbi_log_printf("ARM using 0x%x\n", hook_arm);
 		h->thumb = 0;
 		h->patch = (unsigned int)hook_arm;
 		h->orig = addr;
@@ -111,9 +109,9 @@ int hook(struct hook_t *h, int pid, char *libname, char *funcname, void *hook_ar
 	}
 	else {
 		if ((unsigned long int)hook_thumb % 4 == 0)
-			adbi_log_fmt("warning hook is not thumb 0x%x\n", hook_thumb);
+			adbi_log_printf("warning hook is not thumb 0x%x\n", hook_thumb);
 		h->thumb = 1;
-		adbi_log_fmt("THUMB using 0x%x\n", hook_thumb);
+		adbi_log_printf("THUMB using 0x%x\n", hook_thumb);
 		h->patch = (unsigned int)hook_thumb;
 		h->orig = addr;	
 		h->jumpt[1] = 0xb4;
@@ -136,12 +134,9 @@ int hook(struct hook_t *h, int pid, char *libname, char *funcname, void *hook_ar
 		unsigned int orig = addr - 1; // sub 1 to get real address
 		for (i = 0; i < 20; i++) {
 			h->storet[i] = ((unsigned char*)orig)[i];
-			//log("%0.2x ", h->storet[i])
 		}
-		//log("\n")
 		for (i = 0; i < 20; i++) {
 			((unsigned char*)orig)[i] = h->jumpt[i];
-			//log("%0.2x ", ((unsigned char*)orig)[i])
 		}
 	}
 	hook_cacheflush((unsigned int)h->orig, (unsigned int)h->orig+sizeof(h->jumpt));
@@ -150,7 +145,7 @@ int hook(struct hook_t *h, int pid, char *libname, char *funcname, void *hook_ar
 
 void hook_precall(struct hook_t *h)
 {
-	adbi_log_fmt("->hook_precall()\n");
+	adbi_log_printf("->hook_precall(%s)\n", h->name);
 	int i;
 	
 	if (h->thumb) {
@@ -165,13 +160,13 @@ void hook_precall(struct hook_t *h)
 	}	
 	hook_cacheflush((unsigned int)h->orig, (unsigned int)h->orig+sizeof(h->jumpt));
     
-	adbi_log_fmt("<-hook_precall()\n");
+	adbi_log_printf("<-hook_precall(%s)\n", h->name);
 }
 
 void hook_postcall(struct hook_t *h)
 {
 	int i;
-	adbi_log_fmt("->hook_postcall()\n");
+	adbi_log_printf("->hook_postcall(%s)\n", h->name);
 	
 	if (h->thumb) {
 		unsigned int orig = h->orig - 1;
@@ -184,58 +179,17 @@ void hook_postcall(struct hook_t *h)
 	}
 	hook_cacheflush((unsigned int)h->orig, (unsigned int)h->orig+sizeof(h->jumpt));	
 
-    adbi_log_fmt("<-hook_postcall()\n");
+    adbi_log_printf("<-hook_postcall(%s)\n", h->name);
 }
 
 void unhook(struct hook_t *h)
 {
-	adbi_log_fmt("unhooking %s = %x  hook = %x ",
-            h->name, h->orig,
+	adbi_log_printf("unhooking %s = %x  hook = %x ",
+            h->name,
+            h->orig,
             h->patch);
 
-    //FIXME (t0kt0ckus): strange, no ?
 	hook_precall(h);
 }
 
-/*
- *  workaround for blocked socket API when process does not have network
- *  permissions
- *
- *  this code simply opens a pseudo terminal (pty) which gives us a
- *  file descriptor. the pty then can be used by another process to
- *  communicate with our instrumentation code. an example program
- *  would be a simple socket-to-pty-bridge
- *  
- *  this function just creates and configures the pty
- *  communication (read, write, poll/select) has to be implemented by hand
- *
- */
-int start_coms(int *coms, char *ptsn)
-{
-	if (!coms) {
-		adbi_log_fmt("coms == null!\n");
-		return 0;
-	}
 
-	*coms = open("/dev/ptmx", O_RDWR|O_NOCTTY);
-	if (*coms <= 0) {
-		adbi_log_fmt("posix_openpt failed\n");
-		return 0;
-	}
-	//else
-	//	log("pty created\n")
-	if (unlockpt(*coms) < 0) {
-		adbi_log_fmt("unlockpt failed\n");
-		return 0;
-	}
-
-	if (ptsn)
-		strcpy(ptsn, (char*)ptsname(*coms));
-
-	struct termios  ios;
-	tcgetattr(*coms, &ios);
-	ios.c_lflag = 0;  // disable ECHO, ICANON, etc...
-	tcsetattr(*coms, TCSANOW, &ios);
-
-	return 1;
-}

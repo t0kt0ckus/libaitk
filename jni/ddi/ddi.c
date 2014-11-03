@@ -4,22 +4,21 @@
  * t0kt0ckus
  * (C) 2014
  *
- * License GPLv3
- *
  */
 #include <unistd.h>
 #include <sys/types.h>
+#include <time.h>
 
 #include "ddi.h"
-#include "ddi_log.h"
 
 void ddi_init()
 {
     pid_t pid = getpid();
-    ddi_log_init(pid);
+    ddi_logger = yal_log_init(DDI_LOG_DIR, DDI, pid);    
 
-    ddi_log_fmt("ddi_init(%d)\n", pid);
+    time_t t0;
+    time(&t0);
+    ddi_log_printf("Starting DDI (PID: %d): %s\n", pid, ctime(&t0));
 }
-
 
 

@@ -25,7 +25,6 @@
 #include <stdlib.h>
 
 #include "../adbi/adbi.h"
-#include "../adbi/adbi_log.h"
 
 
 static struct hook_t eph;
@@ -52,11 +51,11 @@ int my_epoll_wait(int epfd,
 	int res = orig_epoll_wait(epfd, events, maxevents, timeout);
 	if (counter) {
 		hook_postcall(&eph);
-		adbi_log_fmt("epoll_wait() called\n");
+		adbi_log_printf("epoll_wait() called\n");
 		counter--;
 		
 		if (!counter) 
-			adbi_log_fmt("removing hook for epoll_wait() on next event\n");
+			adbi_log_printf("removing hook for epoll_wait() on next event\n");
 	}
         
 	return res;

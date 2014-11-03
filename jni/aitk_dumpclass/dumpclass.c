@@ -5,8 +5,6 @@
  * C) 2014
  *
  */
-
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -18,10 +16,6 @@
 #include <jni.h>
 
 #include "../adbi/adbi.h"
-
-#include "../ddi/dexstuff.h"
-#include "../ddi/dalvik_hook.h"
-#include "../ddi/ddi_log.h"
 #include "../ddi/ddi.h"
 
 #define DUMP_CLASS_NAME "Ljava/lang/String;"
@@ -34,17 +28,6 @@ static int dvkdump_log_init();
 static int aitk_dumpclass();
 static void *aitk_dumpclass_fn(void * targs);
 
-// helper function
-void printString(JNIEnv *env, jobject str, char *l)
-{
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
-	if (s) {
-		ddi_log_fmt("%s%s\n", l, s);
-		(*env)->ReleaseStringUTFChars(env, str, s); 
-	}
-}
-
-// arm version of hook
 extern int my_epoll_wait_arm(int epfd,
         struct epoll_event *events,
         int maxevents, 
@@ -65,7 +48,7 @@ int my_epoll_wait(int epfd,
 	int res = orig_epoll_wait(epfd, events, maxevents, timeout);
 	if (counter) {
 		hook_postcall(&eph);
-		adbi_log_fmt("epoll_wait() called\n");
+		adbi_log_printf("epoll_wait() called\n");
 		counter--;
 		
 	    // resolve symbols from DVM
@@ -79,7 +62,7 @@ int my_epoll_wait(int epfd,
         pthread_create(&logcat_pth, &attrs, aitk_dumpclass_fn, DUMP_CLASS_NAME);  
 	    
 		if (!counter) 
-			adbi_log_fmt("removing hook for epoll_wait() on next event\n");
+			adbi_log_printf("removing hook for epoll_wait() on next event\n");
 	}
 	
 	return res;
@@ -137,10 +120,10 @@ void *aitk_dumpclass_fn(void * targs)
 int aitk_dumpclass(char *clname)
 {
     time_t t_start = time(NULL);
-    ddi_log_fmt("aitk_dumpclass(): ...");
+    ddi_log_printf("aitk_dumpclass(): ...");
     
     if ((! dvkdump_logfile_ptr) && (dvkdump_log_init())) {
-        ddi_log_fmt("Failed to init dump file, aborting !\n");
+        ddi_log_printf("Failed to init dump file, aborting !\n");
         return -1;
     }
     
@@ -182,7 +165,7 @@ int aitk_dumpclass(char *clname)
     }
 
     time_t t_end = time(NULL);
-    ddi_log_fmt(" completed (%d s)\n", t_end - t_start);
+    ddi_log_printf(" completed (%d s)\n", t_end - t_start);
     return 0;        
 }
 

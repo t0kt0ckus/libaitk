@@ -7,12 +7,18 @@
  *  License: LGPL v2.1
  *
  */
-
-#include <string.h>
-#include <jni.h>
+/*
+ * Aitk
+ *
+ * t0kt0ckus
+ * (C) 2014
+ *
+ */
 #include <stdio.h>
+#include <string.h>
 #include <fcntl.h>
 #include <dlfcn.h>
+#include <jni.h>
 
 #include "Common.h"
 
@@ -199,7 +205,7 @@ typedef struct Method {
      */
 
     /* the actual code */
-    const u2*       insns;      
+    u2*       insns;      
 	
 	 /* cached JNI argument and return-type hints */
     int             jniArgInfo;
@@ -323,11 +329,11 @@ struct dexstuff_t
 	int done;
 };
 
-#endif
-
 void dexstuff_resolv_dvm(struct dexstuff_t *d);
 int dexstuff_loaddex(struct dexstuff_t *d, char *path);
 void* dexstuff_defineclass(struct dexstuff_t *d, char *name, int cookie);
 void* getSelf(struct dexstuff_t *d);
-void dalvik_dump_class(struct dexstuff_t *dex, char *clname);
+
+#endif
+
 

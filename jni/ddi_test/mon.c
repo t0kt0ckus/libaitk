@@ -14,8 +14,6 @@
  * C) 2014
  *
  */
-
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -25,10 +23,6 @@
 #include <jni.h>
 
 #include "../adbi/adbi.h"
-
-#include "../ddi/dexstuff.h"
-#include "../ddi/dalvik_hook.h"
-#include "../ddi/ddi_log.h"
 #include "../ddi/ddi.h"
 
 static struct hook_t eph;
@@ -52,11 +46,11 @@ static struct dalvik_hook_t sb20;
 // helper function
 void printString(JNIEnv *env, jobject str, char *l)
 {
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
-	if (s) {
-		ddi_log_fmt("%s%s\n", l, s);
-		(*env)->ReleaseStringUTFChars(env, str, s); 
-	}
+    const char *s = (*env)->GetStringUTFChars(env, str, 0);
+    if (s) {    
+        ddi_log_printf("%s%s\n", l, s);
+        (*env)->ReleaseStringUTFChars(env, str, s);
+    }
 }
 
 // patches
@@ -64,12 +58,12 @@ static void* sb1_tostring(JNIEnv *env, jobject obj)
 {
 	dalvik_prepare(&d, &sb1, env);
 	void *res = (*env)->CallObjectMethod(env, obj, sb1.mid); 
-	//ddi_log_fmt("success calling : %s\n", sb1.method_name)
+	//ddi_log_printf("success calling : %s\n", sb1.method_name)
 	dalvik_postcall(&d, &sb1);
 
-	char *s = (*env)->GetStringUTFChars(env, res, 0);
+	const char *s = (*env)->GetStringUTFChars(env, res, 0);
 	if (s) {
-		ddi_log_fmt("sb1.toString() = %s\n", s);
+		ddi_log_printf("sb1.toString() = %s\n", s);
 		(*env)->ReleaseStringUTFChars(env, res, s); 
 	}
 
@@ -79,19 +73,19 @@ static void* sb1_tostring(JNIEnv *env, jobject obj)
 static void* sb20_tostring(JNIEnv *env, jobject obj)
 {
 /*
-	ddi_log_fmt("tostring\n")
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
+	ddi_log_printf("tostring\n")
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
 */
 
 	dalvik_prepare(&d, &sb20, env);
 	void *res = (*env)->CallObjectMethod(env, obj, sb20.mid); 
-	//ddi_log_fmt("success calling : %s\n", sb20.method_name)
+	//ddi_log_printf("success calling : %s\n", sb20.method_name)
 	dalvik_postcall(&d, &sb20);
 
-	char *s = (*env)->GetStringUTFChars(env, res, 0);
+	const char *s = (*env)->GetStringUTFChars(env, res, 0);
 	if (s) {
-		ddi_log_fmt("sb20.toString() = %s\n", s);
+		ddi_log_printf("sb20.toString() = %s\n", s);
 		(*env)->ReleaseStringUTFChars(env, res, s); 
 	}
 
@@ -101,24 +95,24 @@ static void* sb20_tostring(JNIEnv *env, jobject obj)
 static void* sb2_compareto(JNIEnv *env, jobject obj, jobject str)
 {
 /*
-	ddi_log_fmt("compareto\n")
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
-	ddi_log_fmt("str = 0x%x\n", str)
+	ddi_log_printf("compareto\n")
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
+	ddi_log_printf("str = 0x%x\n", str)
 */
 
 	jvalue args[1];
 	args[0].l = str;
 	dalvik_prepare(&d, &sb2, env);
 	int res = (*env)->CallIntMethodA(env, obj, sb2.mid, args); 
-	//ddi_log_fmt("success calling : %s\n", sb2.method_name)
+	//ddi_log_printf("success calling : %s\n", sb2.method_name)
 	dalvik_postcall(&d, &sb2);
 
 	printString(env, obj, "sb2 = "); 
 
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
+	const char *s = (*env)->GetStringUTFChars(env, str, 0);
 	if (s) {
-		ddi_log_fmt("sb2.comapreTo() = %d s> %s\n", res, s);
+		ddi_log_printf("sb2.comapreTo() = %d s> %s\n", res, s);
 		(*env)->ReleaseStringUTFChars(env, str, s);
 	}
 	
@@ -128,24 +122,24 @@ static void* sb2_compareto(JNIEnv *env, jobject obj, jobject str)
 static void* sb3_comparetocase(JNIEnv *env, jobject obj, jobject str)
 {
 /*
-	ddi_log_fmt("comparetocase\n")
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
-	ddi_log_fmt("str = 0x%x\n", str)
+	ddi_log_printf("comparetocase\n")
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
+	ddi_log_printf("str = 0x%x\n", str)
 */
 
 	jvalue args[1];
 	args[0].l = str;
 	dalvik_prepare(&d, &sb3, env);
 	int res = (*env)->CallIntMethodA(env, obj, sb3.mid, args); 
-	//ddi_log_fmt("success calling : %s\n", sb3.method_name)
+	//ddi_log_printf("success calling : %s\n", sb3.method_name)
 	dalvik_postcall(&d, &sb3);
 
 	printString(env, obj, "sb3 = "); 
 
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
+	const char *s = (*env)->GetStringUTFChars(env, str, 0);
 	if (s) {
-		ddi_log_fmt("sb3.comapreToIgnoreCase() = %d s> %s\n", res, s);
+		ddi_log_printf("sb3.comapreToIgnoreCase() = %d s> %s\n", res, s);
 		(*env)->ReleaseStringUTFChars(env, str, s); 
 	}
 
@@ -155,10 +149,10 @@ static void* sb3_comparetocase(JNIEnv *env, jobject obj, jobject str)
 static void* sb7_indexof(JNIEnv *env, jobject obj, jobject str, jint i)
 {
 /*
-	ddi_log_fmt("indexof\n")
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
-	ddi_log_fmt("str = 0x%x\n", str)
+	ddi_log_printf("indexof\n")
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
+	ddi_log_printf("str = 0x%x\n", str)
 */
 
 	jvalue args[2];
@@ -166,14 +160,14 @@ static void* sb7_indexof(JNIEnv *env, jobject obj, jobject str, jint i)
 	args[1].i = i;
 	dalvik_prepare(&d, &sb7, env);
 	int res = (*env)->CallIntMethodA(env, obj, sb7.mid, args);
-	//ddi_log_fmt("success calling : %s\n", sb7.method_name)
+	//ddi_log_printf("success calling : %s\n", sb7.method_name)
 	dalvik_postcall(&d, &sb7);
 
 	printString(env, obj, "sb7 = "); 
 
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
+	const char *s = (*env)->GetStringUTFChars(env, str, 0);
 	if (s) {
-		ddi_log_fmt("sb7.indexOf() = %d (i=%d) %s\n", res, i, s);
+		ddi_log_printf("sb7.indexOf() = %d (i=%d) %s\n", res, i, s);
 		(*env)->ReleaseStringUTFChars(env, str, s); 
 	}
 
@@ -183,10 +177,10 @@ static void* sb7_indexof(JNIEnv *env, jobject obj, jobject str, jint i)
 static void* sb11_indexof(JNIEnv *env, jobject obj, jobject str, jint i)
 {
 /*
-	ddi_log_fmt("indexof\n")
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
-	ddi_log_fmt("str = 0x%x\n", str)
+	ddi_log_printf("indexof\n")
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
+	ddi_log_printf("str = 0x%x\n", str)
 */
 
 	jvalue args[2];
@@ -194,14 +188,14 @@ static void* sb11_indexof(JNIEnv *env, jobject obj, jobject str, jint i)
 	args[1].i = i;
 	dalvik_prepare(&d, &sb11, env);
 	int res = (*env)->CallIntMethodA(env, obj, sb11.mid, args);
-	//ddi_log_fmt("success calling : %s\n", sb11.method_name)
+	//ddi_log_printf("success calling : %s\n", sb11.method_name)
 	dalvik_postcall(&d, &sb11);
 
 	printString(env, obj, "sb11 = "); 
 
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
+	const char *s = (*env)->GetStringUTFChars(env, str, 0);
 	if (s) {
-		ddi_log_fmt("sb11.indexOf() = %d (i=%d) %s\n", res, i, s);
+		ddi_log_printf("sb11.indexOf() = %d (i=%d) %s\n", res, i, s);
 		(*env)->ReleaseStringUTFChars(env, str, s); 
 	}
 
@@ -211,10 +205,10 @@ static void* sb11_indexof(JNIEnv *env, jobject obj, jobject str, jint i)
 static void* sb10_startswith(JNIEnv *env, jobject obj, jobject str, jint i)
 {
 /*
-	ddi_log_fmt("indexof\n")
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
-	ddi_log_fmt("str = 0x%x\n", str)
+	ddi_log_printf("indexof\n")
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
+	ddi_log_printf("str = 0x%x\n", str)
 */
 
 	jvalue args[2];
@@ -222,14 +216,14 @@ static void* sb10_startswith(JNIEnv *env, jobject obj, jobject str, jint i)
 	args[1].i = i;
 	dalvik_prepare(&d, &sb10, env);
 	int res = (*env)->CallBooleanMethodA(env, obj, sb10.mid, args);
-	//ddi_log_fmt("success calling : %s\n", sb10.method_name)
+	//ddi_log_printf("success calling : %s\n", sb10.method_name)
 	dalvik_postcall(&d, &sb10);
 
 	printString(env, obj, "sb10 = "); 
 
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
+	const char *s = (*env)->GetStringUTFChars(env, str, 0);
 	if (s) {
-		ddi_log_fmt("sb10.startswith() = %d (i=%d) %s\n", res, i, s);
+		ddi_log_printf("sb10.startswith() = %d (i=%d) %s\n", res, i, s);
 		(*env)->ReleaseStringUTFChars(env, str, s); 
 	}
 
@@ -239,23 +233,23 @@ static void* sb10_startswith(JNIEnv *env, jobject obj, jobject str, jint i)
 static void* sb8_matches(JNIEnv *env, jobject obj, jobject str)
 {
 /*
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
-	ddi_log_fmt("str = 0x%x\n", str)
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
+	ddi_log_printf("str = 0x%x\n", str)
 */
 
 	jvalue args[1];
 	args[0].l = str;
 	dalvik_prepare(&d, &sb8, env);
 	int res = (*env)->CallBooleanMethodA(env, obj, sb8.mid, args);
-	//ddi_log_fmt("success calling : %s\n", sb8.method_name)
+	//ddi_log_printf("success calling : %s\n", sb8.method_name)
 	dalvik_postcall(&d, &sb8);
 
 	printString(env, obj, "sb8 = "); 
 
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
+	const char *s = (*env)->GetStringUTFChars(env, str, 0);
 	if (s) {
-		ddi_log_fmt("sb8.matches() = %d %s\n", res, s);
+		ddi_log_printf("sb8.matches() = %d %s\n", res, s);
 		(*env)->ReleaseStringUTFChars(env, str, s); 
 	}
 
@@ -265,23 +259,23 @@ static void* sb8_matches(JNIEnv *env, jobject obj, jobject str)
 static void* sb13_equalsIgnoreCase(JNIEnv *env, jobject obj, jobject str)
 {
 /*
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
-	ddi_log_fmt("str = 0x%x\n", str)
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
+	ddi_log_printf("str = 0x%x\n", str)
 */
 
 	jvalue args[1];
 	args[0].l = str;
 	dalvik_prepare(&d, &sb13, env);
 	int res = (*env)->CallBooleanMethodA(env, obj, sb13.mid, args);
-	//ddi_log_fmt("success calling : %s\n", sb13.method_name)
+	//ddi_log_printf("success calling : %s\n", sb13.method_name)
 	dalvik_postcall(&d, &sb13);
 
 	printString(env, obj, "sb13 = "); 
 
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
+	const char *s = (*env)->GetStringUTFChars(env, str, 0);
 	if (s) {
-		ddi_log_fmt("sb13.equalsIgnoreCase() = %d %s\n", res, s);
+		ddi_log_printf("sb13.equalsIgnoreCase() = %d %s\n", res, s);
 		(*env)->ReleaseStringUTFChars(env, str, s); 
 	}
 
@@ -291,23 +285,23 @@ static void* sb13_equalsIgnoreCase(JNIEnv *env, jobject obj, jobject str)
 static void* sb14_contentEquals(JNIEnv *env, jobject obj, jobject str)
 {
 /*
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
-	ddi_log_fmt("str = 0x%x\n", str)
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
+	ddi_log_printf("str = 0x%x\n", str)
 */
 
 	jvalue args[1];
 	args[0].l = str;
 	dalvik_prepare(&d, &sb14, env);
 	int res = (*env)->CallBooleanMethodA(env, obj, sb14.mid, args);
-	//ddi_log_fmt("success calling : %s\n", sb14.method_name)
+	//ddi_log_printf("success calling : %s\n", sb14.method_name)
 	dalvik_postcall(&d, &sb14);
 
 	printString(env, obj, "sb14 = "); 
 
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
+	const char *s = (*env)->GetStringUTFChars(env, str, 0);
 	if (s) {
-		ddi_log_fmt("sb14.contentEquals() = %d %s\n", res, s);
+		ddi_log_printf("sb14.contentEquals() = %d %s\n", res, s);
 		(*env)->ReleaseStringUTFChars(env, str, s); 
 	}
 
@@ -317,23 +311,23 @@ static void* sb14_contentEquals(JNIEnv *env, jobject obj, jobject str)
 static void* sb9_endswith(JNIEnv *env, jobject obj, jobject str)
 {
 /*
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
-	ddi_log_fmt("str = 0x%x\n", str)
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
+	ddi_log_printf("str = 0x%x\n", str)
 */
 
 	jvalue args[1];
 	args[0].l = str;
 	dalvik_prepare(&d, &sb9, env);
 	int res = (*env)->CallBooleanMethodA(env, obj, sb9.mid, args);
-	//ddi_log_fmt("success calling : %s\n", sb9.method_name)
+	//ddi_log_printf("success calling : %s\n", sb9.method_name)
 	dalvik_postcall(&d, &sb9);
 
 	printString(env, obj, "sb9 = "); 
 
-	char *s = (*env)->GetStringUTFChars(env, str, 0);
+	const char *s = (*env)->GetStringUTFChars(env, str, 0);
 	if (s) {
-		ddi_log_fmt("sb9.endswith() = %d %s\n", res, s);
+		ddi_log_printf("sb9.endswith() = %d %s\n", res, s);
 		(*env)->ReleaseStringUTFChars(env, str, s); 
 	}
 
@@ -344,10 +338,10 @@ static void* sb9_endswith(JNIEnv *env, jobject obj, jobject str)
 static void* sb6_contains(JNIEnv *env, jobject obj, jobject str)
 {
 /*
-	ddi_log_fmt("contains\n")
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
-	ddi_log_fmt("str = 0x%x\n", str)
+	ddi_log_printf("contains\n")
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
+	ddi_log_printf("str = 0x%x\n", str)
 */
 dalvik_dump_class(&d, "");
 
@@ -355,7 +349,7 @@ dalvik_dump_class(&d, "");
 	args[0].l = str;
 	dalvik_prepare(&d, &sb6, env);
 	int res = (*env)->CallBooleanMethodA(env, obj, sb6.mid, args);
-	//ddi_log_fmt("success calling : %s\n", sb6.method_name)
+	//ddi_log_printf("success calling : %s\n", sb6.method_name)
 	dalvik_postcall(&d, &sb6);
 
 	printString(env, obj, "sb6 = "); 
@@ -366,11 +360,11 @@ dalvik_dump_class(&d, "");
 static void* sb5_getmethod(JNIEnv *env, jobject obj, jobject str, jobject cls)
 {
 /*
-	ddi_log_fmt("getmethod\n")
-	ddi_log_fmt("env = 0x%x\n", env)
-	ddi_log_fmt("obj = 0x%x\n", obj)
-	ddi_log_fmt("str = 0x%x\n", str)
-	ddi_log_fmt("cls = 0x%x\n", cls)
+	ddi_log_printf("getmethod\n")
+	ddi_log_printf("env = 0x%x\n", env)
+	ddi_log_printf("obj = 0x%x\n", obj)
+	ddi_log_printf("str = 0x%x\n", str)
+	ddi_log_printf("cls = 0x%x\n", cls)
 */
 
 	jvalue args[2];
@@ -378,13 +372,13 @@ static void* sb5_getmethod(JNIEnv *env, jobject obj, jobject str, jobject cls)
 	args[1].l = cls;
 	dalvik_prepare(&d, &sb5, env);
 	void *res = (*env)->CallObjectMethodA(env, obj, sb5.mid, args); 
-	ddi_log_fmt("success calling : %s\n", sb5.method_name);
+	ddi_log_printf("success calling : %s\n", sb5.method_name);
 	dalvik_postcall(&d, &sb5);
 
 	if (str) {
-		char *s = (*env)->GetStringUTFChars(env, str, 0);
+		const char *s = (*env)->GetStringUTFChars(env, str, 0);
 		if (s) {
-			ddi_log_fmt("sb5.getmethod = %s\n", s);
+			ddi_log_printf("sb5.getmethod = %s\n", s);
 			(*env)->ReleaseStringUTFChars(env, str, s); 
 		}
 	}
@@ -394,7 +388,7 @@ static void* sb5_getmethod(JNIEnv *env, jobject obj, jobject str, jobject cls)
 
 void do_patch()
 {
-	ddi_log_fmt("setting hooks on String/String buffer methods ...\n");
+	ddi_log_printf("setting hooks on String/String buffer methods ...\n");
 
 	dalvik_hook_setup(&sb1, "Ljava/lang/StringBuffer;", 
             "toString",
@@ -483,7 +477,7 @@ int my_epoll_wait(int epfd,
 	int res = orig_epoll_wait(epfd, events, maxevents, timeout);
 	if (counter) {
 		hook_postcall(&eph);
-		adbi_log_fmt("epoll_wait() called\n");
+		adbi_log_printf("epoll_wait() called\n");
 		counter--;
 		
 	    // resolve symbols from DVM
@@ -492,7 +486,7 @@ int my_epoll_wait(int epfd,
 	    do_patch();
 	    
 		if (!counter) 
-			adbi_log_fmt("removing hook for epoll_wait() on next event\n");
+			adbi_log_printf("removing hook for epoll_wait() on next event\n");
 	}
 	
 	return res;

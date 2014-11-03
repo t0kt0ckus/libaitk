@@ -17,9 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "dexstuff.h"
-#include "dalvik_hook.h"
-#include "ddi_log.h"
+#include "ddi.h"
 
 int dalvik_hook_setup(struct dalvik_hook_t *h,
         char *cls,
@@ -54,11 +52,11 @@ int dalvik_hook_setup(struct dalvik_hook_t *h,
 void* dalvik_hook(struct dexstuff_t *dex, struct dalvik_hook_t *h)
 {
 	if (h->debug_me)
-		ddi_log_fmt("dalvik_hook: class %s\n", h->clname);
+		ddi_log_printf("dalvik_hook: class %s\n", h->clname);
 	
 	void *target_cls = dex->dvmFindLoadedClass_fnPtr(h->clname);
 	if (h->debug_me)
-		ddi_log_fmt("class = 0x%x\n", target_cls);
+		ddi_log_printf("class = 0x%x\n", target_cls);
 
     // FIXME: possible to print elsewhere ?
 	// print class in logcat
@@ -67,7 +65,7 @@ void* dalvik_hook(struct dexstuff_t *dex, struct dalvik_hook_t *h)
 
 	if (!target_cls) {
 		if (h->debug_me)
-			ddi_log_fmt("target_cls == 0\n");
+			ddi_log_printf("target_cls == 0\n");
 		return (void*)0;
 	}
 
@@ -83,7 +81,7 @@ void* dalvik_hook(struct dexstuff_t *dex, struct dalvik_hook_t *h)
 	}
 
 	if (h->debug_me)
-		ddi_log_fmt("%s(%s) = 0x%x\n", 
+		ddi_log_printf("%s(%s) = 0x%x\n", 
                 h->method_name, 
                 h->method_sig, 
                 h->method);
@@ -92,9 +90,9 @@ void* dalvik_hook(struct dexstuff_t *dex, struct dalvik_hook_t *h)
 		h->insns = h->method->insns;
 
 		if (h->debug_me) {
-			ddi_log_fmt("nativeFunc %x\n", h->method->nativeFunc);
+			ddi_log_printf("nativeFunc %x\n", h->method->nativeFunc);
 		
-			ddi_log_fmt(
+			ddi_log_printf(
                     "insSize = 0x%x  registersSize = 0x%x  outsSize = 0x%x\n",
                     h->method->insSize,
                     h->method->registersSize,
@@ -110,31 +108,31 @@ void* dalvik_hook(struct dexstuff_t *dex, struct dalvik_hook_t *h)
 		h->method->outsSize = h->n_oss;
 
 		if (h->debug_me) {
-			ddi_log_fmt("shorty %s\n", h->method->shorty);
-			ddi_log_fmt("name %s\n", h->method->name);
-			ddi_log_fmt("arginfo %x\n", h->method->jniArgInfo);
+			ddi_log_printf("shorty %s\n", h->method->shorty);
+			ddi_log_printf("name %s\n", h->method->name);
+			ddi_log_printf("arginfo %x\n", h->method->jniArgInfo);
 		}
 		h->method->jniArgInfo = 0x80000000; // <--- also important
 		if (h->debug_me) {
-			ddi_log_fmt("noref %c\n", h->method->noRef);
-			ddi_log_fmt("access %x\n", h->method->a);
+			ddi_log_printf("noref %c\n", h->method->noRef);
+			ddi_log_printf("access %x\n", h->method->a);
 		}
 		h->access_flags = h->method->a;
 		h->method->a = h->method->a | h->af; // make method native
 		if (h->debug_me)
-			ddi_log_fmt("access %x\n", h->method->a);
+			ddi_log_printf("access %x\n", h->method->a);
 	
 		dex->dvmUseJNIBridge_fnPtr(h->method, h->native_func);
 		
 		if (h->debug_me)
-			ddi_log_fmt("patched %s to: 0x%x\n", 
+			ddi_log_printf("patched %s to: 0x%x\n", 
                     h->method_name, h->native_func);
 
 		return (void*)1;
 	}
 	else {
 		if (h->debug_me)
-			ddi_log_fmt("could NOT patch %s\n", h->method_name);
+			ddi_log_printf("could NOT patch %s\n", h->method_name);
 	}
 
 	return (void*)0;
@@ -149,7 +147,7 @@ int dalvik_prepare(struct dexstuff_t *dex,
 	if (h->resolvm) {
 		h->cls = (*env)->FindClass(env, h->clnamep);
 		if (h->debug_me)
-			ddi_log_fmt("cls = 0x%x\n", h->cls);
+			ddi_log_printf("cls = 0x%x\n", h->cls);
 		if (!h->cls)
 			return 0;
 		if (h->sm)
@@ -163,7 +161,7 @@ int dalvik_prepare(struct dexstuff_t *dex,
                     h->method_name,
                     h->method_sig);
 		if (h->debug_me)
-			ddi_log_fmt("mid = 0x%x\n", h-> mid);
+			ddi_log_printf("mid = 0x%x\n", h-> mid);
 		if (!h->mid)
 			return 0;
 	}
@@ -182,20 +180,20 @@ void dalvik_postcall(struct dexstuff_t *dex, struct dalvik_hook_t *h)
 	h->method->registersSize = h->n_rss;
 	h->method->outsSize = h->n_oss;
 
-	//ddi_log_fmt("shorty %s\n", h->method->shorty)
-	//ddi_log_fmt("name %s\n", h->method->name)
-	//ddi_log_fmt("arginfo %x\n", h->method->jniArgInfo)
+	//ddi_log_printf("shorty %s\n", h->method->shorty)
+	//ddi_log_printf("name %s\n", h->method->name)
+	//ddi_log_printf("arginfo %x\n", h->method->jniArgInfo)
 	h->method->jniArgInfo = 0x80000000;
-	//ddi_log_fmt("noref %c\n", h->method->noRef)
-	//ddi_log_fmt("access %x\n", h->method->a)
+	//ddi_log_printf("noref %c\n", h->method->noRef)
+	//ddi_log_printf("access %x\n", h->method->a)
 	h->access_flags = h->method->a;
 	h->method->a = h->method->a | h->af;
-	//ddi_log_fmt("access %x\n", h->method->a)
+	//ddi_log_printf("access %x\n", h->method->a)
 
 	dex->dvmUseJNIBridge_fnPtr(h->method, h->native_func);
 	
 	if (h->debug_me)
-		ddi_log_fmt("patched BACK %s to: 0x%x\n", 
+		ddi_log_printf("patched BACK %s to: 0x%x\n", 
                 h->method_name, h->native_func);
 }
 
