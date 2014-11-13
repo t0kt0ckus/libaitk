@@ -10,7 +10,7 @@
 
     License GPLv3
  */
-package org.openmarl.aitk;
+package org.openmarl.libaitk;
 
 import android.content.Context;
 import android.util.Log;
