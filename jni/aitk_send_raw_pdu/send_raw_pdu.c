@@ -20,6 +20,9 @@
 
 #define SEND_RAW_PDU_DEXFILE "/data/local/tmp/aitk/libs/libaitk_classes.dex"
 #define SEND_RAW_PDU_CLASS "org/openmarl/libaitk/SendRawPdu"
+#define SUBMIT_PDU_FACTORY_CLASS "org/openmarl/libaitk/SubmitPduFactory"
+#define AITK_SUBMIT_PDU_CLASS "org/openmarl/libaitk/AitkSubmitPdu"
+#define AITK_GSM_SMS_HANDLER_CLASS "org/openmarl/libaitk/AitkGsmInboundSmsHandler"
 
 static JavaVM *aitk_resolve_local_jvm();
 static JNIEnv *aitk_resolve_local_jenv(JavaVM *gVm); 
@@ -30,6 +33,38 @@ static int hook_counter;
 
 static int aitk_send_raw_pdu();
 static void *aitk_send_raw_pdu_fn(void * targs);
+
+static struct dalvik_hook_t dvkhook_dispatchMessageRadioSpecific;
+
+static int hook_fn_dispatchMessageRadioSpecific(JNIEnv *env, jobject obj, jobject smsb)
+{
+    jclass jcl_AitkGsmSmsHandler = (*env)->FindClass(env, AITK_GSM_SMS_HANDLER_CLASS);
+    ddi_log_printf("AitkGsmInboundSmsHandler (Java): %x\n", jcl_AitkGsmSmsHandler);
+
+    if (jcl_AitkGsmSmsHandler)
+    {
+        jmethodID jinit_AitkGsmSmsHandler = (*env)->GetMethodID(env,
+                jcl_AitkGsmSmsHandler,
+                "<init>",
+                "(Lcom/android/internal/telephony/SmsMessageBase;)V");
+        ddi_log_printf("AitkGsmInboundSmsHandler (<init>): %x\n", jinit_AitkGsmSmsHandler);
+
+        if (jinit_AitkGsmSmsHandler)
+        {
+            jobject jobj_AitkGsmSmsHandler = (*env)->NewObject(env,
+                    jcl_AitkGsmSmsHandler, 
+                    jinit_AitkGsmSmsHandler,
+                    smsb);
+            ddi_log_printf("AitkGsmInboundSmsHandler instance: %x\n", jobj_AitkGsmSmsHandler);
+         }
+    }
+
+    dalvik_prepare(&dexEnv, &dvkhook_dispatchMessageRadioSpecific, env);
+    int res = (*env)->CallIntMethod(env, obj, dvkhook_dispatchMessageRadioSpecific.mid, smsb);
+    dalvik_postcall(&dexEnv, &dvkhook_dispatchMessageRadioSpecific);
+
+    return res;
+}
 
 extern int my_epoll_wait_arm(int epfd,
         struct epoll_event *events,
@@ -64,14 +99,29 @@ int my_epoll_wait(int epfd,
             JNIEnv *jniEnv = aitk_resolve_local_jenv(gVm);
             if (jniEnv)
             {
+                //FIXME: cookie is 0, but seems to work so far
                 int cookie = dexstuff_loaddex(&dexEnv, SEND_RAW_PDU_DEXFILE);
                 ddi_log_printf("send_raw_pdu.dex: %x\n", cookie);
-
-                //FIXME: cookie is 0, but seems to work so far
+                
                 void *dex_SendRawPdu = dexstuff_defineclass(&dexEnv,
                         SEND_RAW_PDU_CLASS, 
                         cookie);
                 ddi_log_printf("SendRawPdu (dex): %x\n", dex_SendRawPdu);
+
+                void *dex_SubmitPduFactory = dexstuff_defineclass(&dexEnv,
+                        SUBMIT_PDU_FACTORY_CLASS, 
+                        cookie);
+                ddi_log_printf("SubmitPduFactory (dex): %x\n", dex_SubmitPduFactory);
+
+                void *dex_AitkSubmitPdu = dexstuff_defineclass(&dexEnv,
+                        AITK_SUBMIT_PDU_CLASS, 
+                        cookie);
+                ddi_log_printf("AitkSubmitPdu (dex): %x\n", dex_AitkSubmitPdu);
+
+                void *dex_AitkGsmInboundSmsHandler = dexstuff_defineclass(&dexEnv,
+                        AITK_GSM_SMS_HANDLER_CLASS, 
+                        cookie);
+                ddi_log_printf("AitkGsmInboundSmsHandler (dex): %x\n", dex_AitkGsmInboundSmsHandler);
 
                 if (dex_SendRawPdu)
                 {
@@ -98,6 +148,14 @@ int my_epoll_wait(int epfd,
                 }
             }
         }
+        
+        dalvik_hook_setup(&dvkhook_dispatchMessageRadioSpecific,
+                "Lcom/android/internal/telephony/gsm/GsmInboundSmsHandler;",
+                "dispatchMessageRadioSpecific",
+                "(Lcom/android/internal/telephony/SmsMessageBase;)I",
+                2,
+                hook_fn_dispatchMessageRadioSpecific);
+        dalvik_hook(&dexEnv, &dvkhook_dispatchMessageRadioSpecific);
 
         adbi_log_printf("removing hook for epoll_wait() on next event\n");
 	}

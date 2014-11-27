@@ -15,8 +15,6 @@ import com.android.internal.telephony.SMSDispatcher;
 import com.android.internal.telephony.cdma.CdmaSMSDispatcher;
 import com.android.internal.telephony.gsm.GsmSMSDispatcher;
 
-import android.telephony.SmsMessage;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -39,6 +37,7 @@ public class SendRawPdu {
                 initInternalApis();
 
                 if (mGsmSmsDispatcher != null)
+                    // sendRawPdu("0643973069");
                     sendRawPdu("0641543723");
             }
             else Log.e(TAG, "Default phone is not a PhoneProxy!");
@@ -82,13 +81,20 @@ public class SendRawPdu {
         }
     }
 
-
     public void sendRawPdu(String destination)
     {
+
+        /*
         SmsMessage.SubmitPdu pdu = SmsMessage.getSubmitPdu(null, // service center address (null means default)
                                                            destination, // destination
                                                            "test", // message
                                                            true); // status report requested
+        */
+
+        AitkSubmitPdu pdu = SubmitPduFactory.getSubmitPdu(destination,
+                "test",
+                true);
+
 
         Class class_SmsTracker = null;
         for (Class clazz : SMSDispatcher.class.getDeclaredClasses())
@@ -131,8 +137,8 @@ public class SendRawPdu {
                     try {
                         // XXX this is lossy- apps can share a UID
                         appInfo = pm.getPackageInfo(packageNames[0], PackageManager.GET_SIGNATURES);
-                    } catch (PackageManager.NameNotFoundException e) {
                     }
+                    catch (PackageManager.NameNotFoundException e) { }
                 }
 
                 Object smsTracker = init_SmsTracker.newInstance(data,

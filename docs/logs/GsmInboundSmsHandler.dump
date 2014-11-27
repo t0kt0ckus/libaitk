@@ -1,0 +1,110 @@
+--------- beginning of /dev/log/system
+--------- beginning of /dev/log/main
+I/dalvikvm( 1317): DexOpt: source file mod time mismatch (5476b258 vs 5476bab6)
+I/dalvikvm( 1317): ----- class 'Lcom/android/internal/telephony/gsm/GsmInboundSmsHandler;' cl=0x0 ser=0x50000e73 -----
+I/dalvikvm( 1317):   objectSize=76 (72 from super)
+I/dalvikvm( 1317):   access=0x0003.0001
+I/dalvikvm( 1317):   super='Lcom/android/internal/telephony/InboundSmsHandler;' (cl=0x0)
+I/dalvikvm( 1317):   vtable (96 entries, 94 in super):
+I/dalvikvm( 1317):      0: 0x5763d080                clone ()Ljava/lang/Object;
+I/dalvikvm( 1317):      1: 0x5763d0b8               equals (Ljava/lang/Object;)Z
+I/dalvikvm( 1317):      2: 0x5763d0f0             finalize ()V
+I/dalvikvm( 1317):      3: 0x5763d128             getClass ()Ljava/lang/Class;
+I/dalvikvm( 1317):      4: 0x5763d160             hashCode ()I
+I/dalvikvm( 1317):      5: 0x5763d198               notify ()V
+I/dalvikvm( 1317):      6: 0x5763d1d0            notifyAll ()V
+I/dalvikvm( 1317):      7: 0x5763d208             toString ()Ljava/lang/String;
+I/dalvikvm( 1317):      8: 0x5763d240                 wait ()V
+I/dalvikvm( 1317):      9: 0x5763d278                 wait (J)V
+I/dalvikvm( 1317):     10: 0x5763d2b0                 wait (JI)V
+I/dalvikvm( 1317):     11: 0x579c3b10            addLogRec (Ljava/lang/String;)V
+I/dalvikvm( 1317):     12: 0x579c3b48             addState (Lcom/android/internal/util/State;)V
+I/dalvikvm( 1317):     13: 0x579c3b80             addState (Lcom/android/internal/util/State;Lcom/android/internal/util/State;)V
+I/dalvikvm( 1317):     14: 0x579c3bb8          copyLogRecs ()Ljava/util/Collection;
+I/dalvikvm( 1317):     15: 0x579c3bf0         deferMessage (Landroid/os/Message;)V
+I/dalvikvm( 1317):     16: 0x579c3c28                 dump (Ljava/io/FileDescriptor;Ljava/io/PrintWriter;[Ljava/lang/String;)V
+I/dalvikvm( 1317):     17: 0x579c3c60    getCurrentMessage ()Landroid/os/Message;
+I/dalvikvm( 1317):     18: 0x579c3c98      getCurrentState ()Lcom/android/internal/util/IState;
+I/dalvikvm( 1317):     19: 0x579c3cd0           getHandler ()Landroid/os/Handler;
+I/dalvikvm( 1317):     20: 0x579c3d08            getLogRec (I)Lcom/android/internal/util/StateMachine$LogRec;
+I/dalvikvm( 1317):     21: 0x579c3d40       getLogRecCount ()I
+I/dalvikvm( 1317):     22: 0x579c3d78        getLogRecSize ()I
+I/dalvikvm( 1317):     23: 0x579c3db0      getLogRecString (Landroid/os/Message;)Ljava/lang/String;
+I/dalvikvm( 1317):     24: 0x579c3de8              getName ()Ljava/lang/String;
+I/dalvikvm( 1317):     25: 0x579c3e20      getWhatToString (I)Ljava/lang/String;
+I/dalvikvm( 1317):     26: 0x579c3e58 haltedProcessMessage (Landroid/os/Message;)V
+I/dalvikvm( 1317):     27: 0x579c3e90                isDbg ()Z
+I/dalvikvm( 1317):     28: 0x579c3ec8               isQuit (Landroid/os/Message;)Z
+I/dalvikvm( 1317):     29: 0x579d0558                  log (Ljava/lang/String;)V
+I/dalvikvm( 1317):     30: 0x579c3f38      logAndAddLogRec (Ljava/lang/String;)V
+I/dalvikvm( 1317):     31: 0x579c3f70                 logd (Ljava/lang/String;)V
+I/dalvikvm( 1317):     32: 0x579d0590                 loge (Ljava/lang/String;)V
+I/dalvikvm( 1317):     33: 0x579d05c8                 loge (Ljava/lang/String;Ljava/lang/Throwable;)V
+I/dalvikvm( 1317):     34: 0x579c4018                 logi (Ljava/lang/String;)V
+I/dalvikvm( 1317):     35: 0x579c4050                 logv (Ljava/lang/String;)V
+I/dalvikvm( 1317):     36: 0x579c4088                 logw (Ljava/lang/String;)V
+I/dalvikvm( 1317):     37: 0x579c40c0        obtainMessage ()Landroid/os/Message;
+I/dalvikvm( 1317):     38: 0x579c40f8        obtainMessage (I)Landroid/os/Message;
+I/dalvikvm( 1317):     39: 0x579c4130        obtainMessage (II)Landroid/os/Message;
+I/dalvikvm( 1317):     40: 0x579c4168        obtainMessage (III)Landroid/os/Message;
+I/dalvikvm( 1317):     41: 0x579c41a0        obtainMessage (IIILjava/lang/Object;)Landroid/os/Message;
+I/dalvikvm( 1317):     42: 0x579c41d8        obtainMessage (ILjava/lang/Object;)Landroid/os/Message;
+I/dalvikvm( 1317):     43: 0x579c4210            onHalting ()V
+I/dalvikvm( 1317):     44: 0x579cfd08           onQuitting ()V
+I/dalvikvm( 1317):     45: 0x579c4280                 quit ()V
+I/dalvikvm( 1317):     46: 0x579c42b8              quitNow ()V
+I/dalvikvm( 1317):     47: 0x579c42f0         recordLogRec (Landroid/os/Message;)Z
+I/dalvikvm( 1317):     48: 0x579c4328       removeMessages (I)V
+I/dalvikvm( 1317):     49: 0x579c4360          sendMessage (I)V
+I/dalvikvm( 1317):     50: 0x579c4398          sendMessage (II)V
+I/dalvikvm( 1317):     51: 0x579c43d0          sendMessage (III)V
+I/dalvikvm( 1317):     52: 0x579c4408          sendMessage (IIILjava/lang/Object;)V
+I/dalvikvm( 1317):     53: 0x579c4440          sendMessage (ILjava/lang/Object;)V
+I/dalvikvm( 1317):     54: 0x579c4478          sendMessage (Landroid/os/Message;)V
+I/dalvikvm( 1317):     55: 0x579c44b0 sendMessageAtFrontOfQueue (I)V
+I/dalvikvm( 1317):     56: 0x579c44e8 sendMessageAtFrontOfQueue (II)V
+I/dalvikvm( 1317):     57: 0x579c4520 sendMessageAtFrontOfQueue (III)V
+I/dalvikvm( 1317):     58: 0x579c4558 sendMessageAtFrontOfQueue (IIILjava/lang/Object;)V
+I/dalvikvm( 1317):     59: 0x579c4590 sendMessageAtFrontOfQueue (ILjava/lang/Object;)V
+I/dalvikvm( 1317):     60: 0x579c45c8 sendMessageAtFrontOfQueue (Landroid/os/Message;)V
+I/dalvikvm( 1317):     61: 0x579c4600   sendMessageDelayed (IIIJ)V
+I/dalvikvm( 1317):     62: 0x579c4638   sendMessageDelayed (IIILjava/lang/Object;J)V
+I/dalvikvm( 1317):     63: 0x579c4670   sendMessageDelayed (IIJ)V
+I/dalvikvm( 1317):     64: 0x579c46a8   sendMessageDelayed (IJ)V
+I/dalvikvm( 1317):     65: 0x579c46e0   sendMessageDelayed (ILjava/lang/Object;J)V
+I/dalvikvm( 1317):     66: 0x579c4718   sendMessageDelayed (Landroid/os/Message;J)V
+I/dalvikvm( 1317):     67: 0x579c4750               setDbg (Z)V
+I/dalvikvm( 1317):     68: 0x579c4788      setInitialState (Lcom/android/internal/util/State;)V
+I/dalvikvm( 1317):     69: 0x579c47c0 setLogOnlyTransitions (Z)V
+I/dalvikvm( 1317):     70: 0x579c47f8        setLogRecSize (I)V
+I/dalvikvm( 1317):     71: 0x579c4830                start ()V
+I/dalvikvm( 1317):     72: 0x579c4868         transitionTo (Lcom/android/internal/util/IState;)V
+I/dalvikvm( 1317):     73: 0x579c48a0 transitionToHaltingState ()V
+I/dalvikvm( 1317):     74: 0x579c48d8     unhandledMessage (Landroid/os/Message;)V
+I/dalvikvm( 1317):     75: 0x579cfc28 acknowledgeLastIncomingSms (ZILandroid/os/Message;)V
+I/dalvikvm( 1317):     76: 0x579d0280 addTrackerToRawTableAndSendMessage (Lcom/android/internal/telephony/InboundSmsTracker;)I
+I/dalvikvm( 1317):     77: 0x579d02b8   deleteFromRawTable (Ljava/lang/String;[Ljava/lang/String;)V
+I/dalvikvm( 1317):     78: 0x579d02f0  dispatchDataMessage (Landroid/content/BroadcastReceiver;[[BILjava/lang/String;)Z
+I/dalvikvm( 1317):     79: 0x579d0328       dispatchIntent (Landroid/content/Intent;Ljava/lang/String;ILandroid/content/BroadcastReceiver;)V
+I/dalvikvm( 1317):     80: 0x579d0360      dispatchMessage (Lcom/android/internal/telephony/SmsMessageBase;)I
+I/dalvikvm( 1317):     81: 0x579cfc60 dispatchMessageRadioSpecific (Lcom/android/internal/telephony/SmsMessageBase;)I
+I/dalvikvm( 1317):     82: 0x579d03d0 dispatchNormalMessage (Lcom/android/internal/telephony/SmsMessageBase;)I
+I/dalvikvm( 1317):     83: 0x579d0408          dispatchSMS (Landroid/content/BroadcastReceiver;[[BLjava/lang/String;)Z
+I/dalvikvm( 1317):     84: 0x579d0440              dispose ()V
+I/dalvikvm( 1317):     85: 0x579d0478 filterToDedicateReceiver (Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Z
+I/dalvikvm( 1317):     86: 0x579d04b0             getPhone ()Lcom/android/internal/telephony/PhoneBase;
+I/dalvikvm( 1317):     87: 0x579d04e8         handleNewSms (Landroid/os/AsyncResult;)V
+I/dalvikvm( 1317):     88: 0x579cfcd0              is3gpp2 ()Z
+I/dalvikvm( 1317):     89: 0x579d0600 notifyAndAcknowledgeLastIncomingSms (ZILandroid/os/Message;)V
+I/dalvikvm( 1317):     90: 0x579cfd40  onUpdatePhoneObject (Lcom/android/internal/telephony/PhoneBase;)V
+I/dalvikvm( 1317):     91: 0x579d06a8   processMessagePart (Lcom/android/internal/telephony/InboundSmsTracker;)Z
+I/dalvikvm( 1317):     92: 0x579d06e0  storeVoiceMailCount ()V
+I/dalvikvm( 1317):     93: 0x579cfdb0    updatePhoneObject (Lcom/android/internal/telephony/PhoneBase;)V
+I/dalvikvm( 1317):     94: 0x579cfc98                 init (Landroid/content/Context;Lcom/android/internal/telephony/PhoneBase;)V
+I/dalvikvm( 1317):     95: 0x579cfd78 updateMessageWaitingIndicator (I)V
+I/dalvikvm( 1317):   direct methods (3 entries):
+I/dalvikvm( 1317):      0:               <init> (Landroid/content/Context;Lcom/android/internal/telephony/SmsStorageMonitor;Lcom/android/internal/telephony/PhoneBase;)V
+I/dalvikvm( 1317):      1: makeInboundSmsHandler (Landroid/content/Context;Lcom/android/internal/telephony/SmsStorageMonitor;Lcom/android/internal/telephony/PhoneBase;)Lcom/android/internal/telephony/gsm/GsmInboundSmsHandler;
+I/dalvikvm( 1317):      2:        resultToCause (I)I
+I/dalvikvm( 1317):   instance fields (1 entries):
+I/dalvikvm( 1317):      0: mDataDownloadHandler Lcom/android/internal/telephony/gsm/UsimDataDownloadHandler;

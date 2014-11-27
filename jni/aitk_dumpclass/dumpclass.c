@@ -18,8 +18,9 @@
 #include "../adbi/adbi.h"
 #include "../ddi/ddi.h"
 
-// #define DUMP_CLASS_NAME "Ljava/lang/String;"
-#define DUMP_CLASS_NAME "Lcom/android/internal/telephony/SMSDispatcher;"
+// #define DUMP_CLASS_NAME "Lcom/android/internal/telephony/SMSDispatcher;"
+#define DUMP_CLASS_NAME "Lcom/android/internal/telephony/gsm/GsmInboundSmsHandler;"
+
 
 static struct hook_t eph;
 static struct dexstuff_t d;
