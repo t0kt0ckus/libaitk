@@ -1,0 +1,129 @@
+--------- beginning of /dev/log/system
+--------- beginning of /dev/log/main
+I/dalvikvm( 1320): ----- class 'Lcom/android/internal/telephony/SMSDispatcher;' cl=0x0 ser=0x50000e70 -----
+I/dalvikvm( 1320):   objectSize=84 (28 from super)
+I/dalvikvm( 1320):   access=0x0003.0401
+I/dalvikvm( 1320):   super='Landroid/os/Handler;' (cl=0x0)
+I/dalvikvm( 1320):   vtable (69 entries, 43 in super):
+I/dalvikvm( 1320):      0: 0x57674080                clone ()Ljava/lang/Object;
+I/dalvikvm( 1320):      1: 0x576740b8               equals (Ljava/lang/Object;)Z
+I/dalvikvm( 1320):      2: 0x576740f0             finalize ()V
+I/dalvikvm( 1320):      3: 0x57674128             getClass ()Ljava/lang/Class;
+I/dalvikvm( 1320):      4: 0x57674160             hashCode ()I
+I/dalvikvm( 1320):      5: 0x57674198               notify ()V
+I/dalvikvm( 1320):      6: 0x576741d0            notifyAll ()V
+I/dalvikvm( 1320):      7: 0x5770c758             toString ()Ljava/lang/String;
+I/dalvikvm( 1320):      8: 0x57674240                 wait ()V
+I/dalvikvm( 1320):      9: 0x57674278                 wait (J)V
+I/dalvikvm( 1320):     10: 0x576742b0                 wait (JI)V
+I/dalvikvm( 1320):     11: 0x5770c058      dispatchMessage (Landroid/os/Message;)V
+I/dalvikvm( 1320):     12: 0x5770c090                 dump (Landroid/util/Printer;Ljava/lang/String;)V
+I/dalvikvm( 1320):     13: 0x5770c0c8        getIMessenger ()Landroid/os/IMessenger;
+I/dalvikvm( 1320):     14: 0x5770c100            getLooper ()Landroid/os/Looper;
+I/dalvikvm( 1320):     15: 0x5770c138       getMessageName (Landroid/os/Message;)Ljava/lang/String;
+I/dalvikvm( 1320):     16: 0x57a06020        handleMessage (Landroid/os/Message;)V
+I/dalvikvm( 1320):     17: 0x5770c1a8         hasCallbacks (Ljava/lang/Runnable;)Z
+I/dalvikvm( 1320):     18: 0x5770c1e0          hasMessages (I)Z
+I/dalvikvm( 1320):     19: 0x5770c218          hasMessages (ILjava/lang/Object;)Z
+I/dalvikvm( 1320):     20: 0x5770c250        obtainMessage ()Landroid/os/Message;
+I/dalvikvm( 1320):     21: 0x5770c288        obtainMessage (I)Landroid/os/Message;
+I/dalvikvm( 1320):     22: 0x5770c2c0        obtainMessage (III)Landroid/os/Message;
+I/dalvikvm( 1320):     23: 0x5770c2f8        obtainMessage (IIILjava/lang/Object;)Landroid/os/Message;
+I/dalvikvm( 1320):     24: 0x5770c330        obtainMessage (ILjava/lang/Object;)Landroid/os/Message;
+I/dalvikvm( 1320):     25: 0x5770c368                 post (Ljava/lang/Runnable;)Z
+I/dalvikvm( 1320):     26: 0x5770c3a0   postAtFrontOfQueue (Ljava/lang/Runnable;)Z
+I/dalvikvm( 1320):     27: 0x5770c3d8           postAtTime (Ljava/lang/Runnable;J)Z
+I/dalvikvm( 1320):     28: 0x5770c410           postAtTime (Ljava/lang/Runnable;Ljava/lang/Object;J)Z
+I/dalvikvm( 1320):     29: 0x5770c448          postDelayed (Ljava/lang/Runnable;J)Z
+I/dalvikvm( 1320):     30: 0x5770c480      removeCallbacks (Ljava/lang/Runnable;)V
+I/dalvikvm( 1320):     31: 0x5770c4b8      removeCallbacks (Ljava/lang/Runnable;Ljava/lang/Object;)V
+I/dalvikvm( 1320):     32: 0x5770c4f0 removeCallbacksAndMessages (Ljava/lang/Object;)V
+I/dalvikvm( 1320):     33: 0x5770c528       removeMessages (I)V
+I/dalvikvm( 1320):     34: 0x5770c560       removeMessages (ILjava/lang/Object;)V
+I/dalvikvm( 1320):     35: 0x5770c598      runWithScissors (Ljava/lang/Runnable;J)Z
+I/dalvikvm( 1320):     36: 0x5770c5d0     sendEmptyMessage (I)Z
+I/dalvikvm( 1320):     37: 0x5770c608 sendEmptyMessageAtTime (IJ)Z
+I/dalvikvm( 1320):     38: 0x5770c640 sendEmptyMessageDelayed (IJ)Z
+I/dalvikvm( 1320):     39: 0x5770c678          sendMessage (Landroid/os/Message;)Z
+I/dalvikvm( 1320):     40: 0x5770c6b0 sendMessageAtFrontOfQueue (Landroid/os/Message;)Z
+I/dalvikvm( 1320):     41: 0x5770c6e8    sendMessageAtTime (Landroid/os/Message;J)Z
+I/dalvikvm( 1320):     42: 0x5770c720   sendMessageDelayed (Landroid/os/Message;J)Z
+I/dalvikvm( 1320):     43: 0x57a05db8      calculateLength (Ljava/lang/CharSequence;Z)Lcom/android/internal/telephony/GsmAlphabet$TextEncodingDetails;
+I/dalvikvm( 1320):     44: 0x57a05df0     checkDestination (Lcom/android/internal/telephony/SMSDispatcher$SmsTracker;)Z
+I/dalvikvm( 1320):     45: 0x57a05e28              dispose ()V
+I/dalvikvm( 1320):     46: 0x57a05e60            getFormat ()Ljava/lang/String;
+I/dalvikvm( 1320):     47: 0x57a05e98      getImsSmsFormat ()Ljava/lang/String;
+I/dalvikvm( 1320):     48: 0x57a05ed0 getPremiumSmsPermission (Ljava/lang/String;)I
+I/dalvikvm( 1320):     49: 0x57a05f08        getSmsTracker (Ljava/util/HashMap;Landroid/app/PendingIntent;Landroid/app/PendingIntent;Ljava/lang/String;Ljava/lang/String;)Lcom/android/internal/telephony/SMSDispatcher$SmsTracker;
+I/dalvikvm( 1320):     50: 0x57a05f40        getSmsTracker (Ljava/util/HashMap;Landroid/app/PendingIntent;Landroid/app/PendingIntent;Ljava/lang/String;ZLjava/lang/String;)Lcom/android/internal/telephony/SMSDispatcher$SmsTracker;
+I/dalvikvm( 1320):     51: 0x57a05f78     getSmsTrackerMap (Ljava/lang/String;Ljava/lang/String;I[BLcom/android/internal/telephony/SmsMessageBase$SubmitPduBase;)Ljava/util/HashMap;
+I/dalvikvm( 1320):     52: 0x57a05fb0     getSmsTrackerMap (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/android/internal/telephony/SmsMessageBase$SubmitPduBase;)Ljava/util/HashMap;
+I/dalvikvm( 1320):     53: 0x57a05fe8 handleConfirmShortCode (ZLcom/android/internal/telephony/SMSDispatcher$SmsTracker;)V
+I/dalvikvm( 1320):     54: 0x57a06058 handleReachSentLimit (Lcom/android/internal/telephony/SMSDispatcher$SmsTracker;)V
+I/dalvikvm( 1320):     55: 0x57a06090   handleSendComplete (Landroid/os/AsyncResult;)V
+I/dalvikvm( 1320):     56: 0x57a060c8   handleStatusReport (Ljava/lang/Object;)V
+I/dalvikvm( 1320):     57: 0x57a06100                isIms ()Z
+I/dalvikvm( 1320):     58: 0x57a06138             sendData (Ljava/lang/String;Ljava/lang/String;I[BLandroid/app/PendingIntent;Landroid/app/PendingIntent;Ljava/lang/String;)V
+I/dalvikvm( 1320):     59: 0x57a06170    sendMultipartText (Ljava/lang/String;Ljava/lang/String;Ljava/util/ArrayList;Ljava/util/ArrayList;Ljava/util/ArrayList;Ljava/lang/String;)V
+I/dalvikvm( 1320):     60: 0x57a061a8     sendNewSubmitPdu (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/android/internal/telephony/SmsHeader;ILandroid/app/PendingIntent;Landroid/app/PendingIntent;ZLjava/lang/String;)V
+I/dalvikvm( 1320):     61: 0x57a061e0           sendRawPdu (Lcom/android/internal/telephony/SMSDispatcher$SmsTracker;)V
+I/dalvikvm( 1320):     62: 0x57a06218         sendRetrySms (Lcom/android/internal/telephony/SMSDispatcher$SmsTracker;)V
+I/dalvikvm( 1320):     63: 0x57a06250              sendSms (Lcom/android/internal/telephony/SMSDispatcher$SmsTracker;)V
+I/dalvikvm( 1320):     64: 0x57a06288             sendText (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/app/PendingIntent;Landroid/app/PendingIntent;Ljava/lang/String;)V
+I/dalvikvm( 1320):     65: 0x57a062c0         sendTextMore (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/app/PendingIntent;Landroid/app/PendingIntent;Ljava/lang/String;)V
+I/dalvikvm( 1320):     66: 0x57a062f8 sendTextWithPriority (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/app/PendingIntent;Landroid/app/PendingIntent;I)V
+I/dalvikvm( 1320):     67: 0x57a06330 setPremiumSmsPermission (Ljava/lang/String;I)V
+I/dalvikvm( 1320):     68: 0x57a06368    updatePhoneObject (Lcom/android/internal/telephony/PhoneBase;)V
+I/dalvikvm( 1320):   direct methods (8 entries):
+I/dalvikvm( 1320):      0:             <clinit> ()V
+I/dalvikvm( 1320):      1:               <init> (Lcom/android/internal/telephony/PhoneBase;Lcom/android/internal/telephony/SmsUsageMonitor;Lcom/android/internal/telephony/ImsSMSDispatcher;)V
+I/dalvikvm( 1320):      2: denyIfQueueLimitReached (Lcom/android/internal/telephony/SMSDispatcher$SmsTracker;)Z
+I/dalvikvm( 1320):      3:          getAppLabel (Ljava/lang/String;)Ljava/lang/CharSequence;
+I/dalvikvm( 1320):      4: getNextConcatenatedRef ()I
+I/dalvikvm( 1320):      5:   handleNotInService (ILandroid/app/PendingIntent;)V
+I/dalvikvm( 1320):      6:         needToFilter (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Z
+I/dalvikvm( 1320):      7:     sendMultipartSms (Lcom/android/internal/telephony/SMSDispatcher$SmsTracker;)V
+I/dalvikvm( 1320):   static fields (28 entries):
+I/dalvikvm( 1320):      0:                  DBG Z
+I/dalvikvm( 1320):      1: EVENT_CONFIRM_SEND_TO_POSSIBLE_PREMIUM_SHORT_CODE I
+I/dalvikvm( 1320):      2: EVENT_CONFIRM_SEND_TO_PREMIUM_SHORT_CODE I
+I/dalvikvm( 1320):      3: EVENT_HANDLE_STATUS_REPORT I
+I/dalvikvm( 1320):      4:    EVENT_ICC_CHANGED I
+I/dalvikvm( 1320):      5: EVENT_IMS_STATE_CHANGED I
+I/dalvikvm( 1320):      6: EVENT_IMS_STATE_DONE I
+I/dalvikvm( 1320):      7:    EVENT_NEW_ICC_SMS I
+I/dalvikvm( 1320):      8:       EVENT_RADIO_ON I
+I/dalvikvm( 1320):      9: EVENT_SEND_CONFIRMED_SMS I
+I/dalvikvm( 1320):     10: EVENT_SEND_LIMIT_REACHED_CONFIRMATION I
+I/dalvikvm( 1320):     11:     EVENT_SEND_RETRY I
+I/dalvikvm( 1320):     12: EVENT_SEND_SMS_COMPLETE I
+I/dalvikvm( 1320):     13:     EVENT_SMS_ON_ICC I
+I/dalvikvm( 1320):     14:   EVENT_STOP_SENDING I
+I/dalvikvm( 1320):     15:     MAX_SEND_RETRIES I
+I/dalvikvm( 1320):     16:   MO_MSG_QUEUE_LIMIT I
+I/dalvikvm( 1320):     17: PREMIUM_RULE_USE_BOTH I
+I/dalvikvm( 1320):     18: PREMIUM_RULE_USE_NETWORK I
+I/dalvikvm( 1320):     19: PREMIUM_RULE_USE_SIM I
+I/dalvikvm( 1320):     20:  SEND_NEXT_MSG_EXTRA Ljava/lang/String;
+I/dalvikvm( 1320):     21:     SEND_RETRY_DELAY I
+I/dalvikvm( 1320):     22: SEND_SMS_NO_CONFIRMATION_PERMISSION Ljava/lang/String;
+I/dalvikvm( 1320):     23:      SINGLE_PART_SMS I
+I/dalvikvm( 1320):     24:  SMS_STACK_TYPE_CDMA I
+I/dalvikvm( 1320):     25:   SMS_STACK_TYPE_GSM I
+I/dalvikvm( 1320):     26:                  TAG Ljava/lang/String;
+I/dalvikvm( 1320):     27:     sConcatenatedRef I
+I/dalvikvm( 1320):   instance fields (14 entries):
+I/dalvikvm( 1320):      0:  deliveryPendingList Ljava/util/ArrayList;
+I/dalvikvm( 1320):      1:                  mCi Lcom/android/internal/telephony/CommandsInterface;
+I/dalvikvm( 1320):      2:             mContext Landroid/content/Context;
+I/dalvikvm( 1320):      3:    mImsSMSDispatcher Lcom/android/internal/telephony/ImsSMSDispatcher;
+I/dalvikvm( 1320):      4:        mUsageMonitor Lcom/android/internal/telephony/SmsUsageMonitor;
+I/dalvikvm( 1320):      5:               mPhone Lcom/android/internal/telephony/PhoneBase;
+I/dalvikvm( 1320):      6:      mPremiumSmsRule Ljava/util/concurrent/atomic/AtomicInteger;
+I/dalvikvm( 1320):      7:    mTelephonyManager Landroid/telephony/TelephonyManager;
+I/dalvikvm( 1320):      8:            mResolver Landroid/content/ContentResolver;
+I/dalvikvm( 1320):      9:    mSettingsObserver Lcom/android/internal/telephony/SMSDispatcher$SettingsObserver;
+I/dalvikvm( 1320):     10:          mSmsCapable Z
+I/dalvikvm( 1320):     11:     mSmsSendDisabled Z
+I/dalvikvm( 1320):     12:   mRemainingMessages I
+I/dalvikvm( 1320):     13: mPendingTrackerCount I

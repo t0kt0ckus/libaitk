@@ -18,6 +18,7 @@ import android.util.Log;
 import org.openmarl.susrv.LibSusrv;
 import org.openmarl.susrv.SuShell;
 import org.openmarl.susrv.SuShellInvalidatedException;
+import org.openmarl.susrv.SuShellLifecycleObserver;
 
 /**
  * Aitk injection API.
@@ -28,7 +29,7 @@ import org.openmarl.susrv.SuShellInvalidatedException;
  *
  * @author t0kt0ckus
  */
-public class AitkContext {
+public class AitkContext  {
 
     public static final String AITK_DIR="/data/local/tmp/aitk";
     public static final String AITK_LIBS_DIR="/data/local/tmp/aitk/libs";
@@ -38,6 +39,8 @@ public class AitkContext {
     public static final String AITK_LIB_DDI_TEST = "libddi_test";
     public static final String AITK_LIB_DUMP_ALL = "libaitk_dumpall";
     public static final String AITK_LIB_DUMP_CLASS = "libaitk_dumpclass";
+    public static final String AITK_LIB_SEND_RAW_PDU = "libaitk_send_raw_pdu";
+    public static final String AITK_CLASSES_DEX = "libaitk_classes";
 
     private static AitkContext _instance;
 
@@ -47,7 +50,16 @@ public class AitkContext {
     {
         mSuShell = shell;
         mSuShell.importExecutable("hijack", "hijack");
-        initDirs();
+
+        initAitkDirs();
+        defineBaseInjectionLibs();
+        try {
+            mSuShell.exec("chmod 0777 /data/dalvik-cache");
+            mSuShell.exec("rm /data/dalvik-cache/data@local@tmp@libaitk_classes.dex");
+        }
+        catch(SuShellInvalidatedException e) {
+            Log.e(TAG, e.toString()); // should not happen
+        }
     }
 
     /**
@@ -61,17 +73,20 @@ public class AitkContext {
             SuShell suShell = SuShell.getInstance(ctx, true);
             if (suShell != null) {
                 _instance = new AitkContext(suShell);
-                defineStdlibs(_instance);
             }
             else {
-                Log.e(TAG, "Failed to initialize SU Shell session");
+                Log.e(TAG, "Failed to initialize Aitk context (no SU shell session)");
             }
         }
 
         return _instance;
     }
 
-    /**
+    public static AitkContext getInstance() {
+        return _instance;
+    }
+
+    /**d
      *
      * @param libname
      * @return
@@ -84,11 +99,51 @@ public class AitkContext {
             Log.i(TAG, String.format("Defined injection library <%s> as: %s",
                     libname, libFilePath));
             return true;
-        }
-        else
+        } else
             Log.e(TAG, String.format("Failed to defined injection library <%s> as: %s",
                     libname, libFilePath));
+
         return false;
+    }
+
+    public boolean defineInjectionDex(String dexname) throws SuShellInvalidatedException
+    {
+        String libFilePath = String.format("%s/%s.dex", AITK_LIBS_DIR, dexname);
+        if (mSuShell.cpa(dexname, libFilePath, 0644) == 0) {
+            Log.i(TAG, String.format("Defined injection dex <%s> as: %s",
+                    dexname, libFilePath));
+            return true;
+        } else
+            Log.e(TAG, String.format("Failed to defined injection dex <%s> as: %s",
+                    dexname, libFilePath));
+
+        return false;
+    }
+
+    /**
+     *
+     * @param pid
+     * @param libname
+     * @return
+     * @throws SuShellInvalidatedException
+     */
+    public boolean inject(int pid, String libname) throws SuShellInvalidatedException
+    {
+        String libFilePath = String.format("%s/%s.so", AITK_LIBS_DIR, libname);
+        String cmd_hijack = String.format("hijack -d -p %d -l %s", pid, libFilePath);
+        Log.d(TAG, String.format("hijack: %s", cmd_hijack));
+
+        // FIXME: hijack returns 0 when injection lib unavailable
+        int rval = mSuShell.exec(cmd_hijack);
+        if (rval != 0)
+        {
+            Log.e(TAG, String.format("Failed to inject lib/marl/research/projects/Aitk/app/libsrary <%s> into process with PID %d",
+                    libname, pid));
+            return false;
+        }
+
+        Log.i(TAG, String.format("Injected library <%s> into process with PID %d", libname, pid));
+        return true;
     }
 
     /**
@@ -108,48 +163,28 @@ public class AitkContext {
         return false;
     }
 
-    /**
-     *
-     * @param pid
-     * @param libname
-     * @return
-     * @throws SuShellInvalidatedException
-     */
-    public boolean inject(int pid, String libname) throws SuShellInvalidatedException
-    {
-        String libFilePath = String.format("%s/%s.so", AITK_LIBS_DIR, libname);
-        String cmd_hijack = String.format("hijack -d -p %d -l %s", pid, libFilePath);
-        Log.d(TAG, String.format("hijack: %s", cmd_hijack));
-
-        // FIXME: hijack returns 0 when injection lib on available
-        int rval = mSuShell.exec(cmd_hijack);
-        if (rval != 0)
-        {
-            Log.e(TAG, String.format("Failed to inject library <%s> into process with PID %d",
-                    libname, pid));
-            return false;
-        }
-
-        Log.i(TAG, String.format("Injected library <%s> into process with PID %d", libname, pid));
-        return true;
+    public void release() {
+        mSuShell.exit();
     }
 
-    private static boolean defineStdlibs(AitkContext aitk)
+    private boolean defineBaseInjectionLibs()
     {
         try {
-            return  aitk.defineInjectionLib(AITK_LIB_ADBI_TEST)
-                    && aitk.defineInjectionLib(AITK_LIB_DDI_TEST)
-                    && aitk.defineInjectionLib(AITK_LIB_DUMP_ALL)
-                    && aitk.defineInjectionLib(AITK_LIB_DUMP_CLASS);
+            return defineInjectionLib(AITK_LIB_ADBI_TEST)
+                    && defineInjectionLib(AITK_LIB_DDI_TEST)
+                    && defineInjectionLib(AITK_LIB_DUMP_ALL)
+                    && defineInjectionLib(AITK_LIB_DUMP_CLASS)
+                    && defineInjectionLib(AITK_LIB_SEND_RAW_PDU)
+                    && defineInjectionDex(AITK_CLASSES_DEX);
         }
-        catch (SuShellInvalidatedException e) {
-            Log.e(TAG,
-                    String.format("Failed to define AITK standard libs: %s", e.toString()));
-            return false;
+        catch(SuShellInvalidatedException e) {
+            Log.e(TAG, e.toString()); // this should not happen
         }
+
+        return false;
     }
 
-    private boolean initDirs()
+    private boolean initAitkDirs()
     {
         try {
             mSuShell.mkdir(AITK_DIR, 0755);
@@ -158,8 +193,7 @@ public class AitkContext {
             return true;
         }
         catch (SuShellInvalidatedException e) {
-            Log.e(TAG,
-                    String.format("Failed to init AITK standard dirs: %s", e.toString()));
+            Log.e(TAG, e.toString()); // should not happen
         }
 
         return false;

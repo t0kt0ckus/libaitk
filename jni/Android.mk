@@ -61,7 +61,7 @@ LOCAL_MODULE     := ddi
 LIBDDI_SRC_PATH := $(LOCAL_PATH)/ddi
 LOCAL_SRC_FILES  := $(LIBDDI_SRC_PATH)/dexstuff.c.arm $(LIBDDI_SRC_PATH)/dalvik_hook.c $(LIBDDI_SRC_PATH)/ddi.c
 LOCAL_STATIC_LIBRARIES := adbi
-LOCAL_SHARED_LIBRARIES := libdvl libdl
+LOCAL_SHARED_LIBRARIES := pdvm pbdl
 include $(BUILD_STATIC_LIBRARY)
 
 # libddi_test: attemmpts to hook epoll_wait()/String to test libddi
@@ -71,7 +71,7 @@ LOCAL_MODULE     := ddi_test
 LIBDDI_SRC_PATH := $(LOCAL_PATH)/ddi_test
 LOCAL_SRC_FILES  := $(LIBDDI_SRC_PATH)/mon_arm.c.arm $(LIBDDI_SRC_PATH)/mon.c
 LOCAL_STATIC_LIBRARIES := adbi ddi
-LOCAL_SHARED_LIBRARIES := libdvl libdl
+LOCAL_SHARED_LIBRARIES := pbdvm pbdl
 include $(BUILD_SHARED_LIBRARY)
 
 # libaitk_dumpall: list all dvm-loaded classes (pthread version)
@@ -81,7 +81,7 @@ LOCAL_MODULE     := aitk_dumpall
 AITK_SRC_PATH := $(LOCAL_PATH)/aitk_dumpall
 LOCAL_SRC_FILES  := $(AITK_SRC_PATH)/dumpall_arm.c.arm $(AITK_SRC_PATH)/dumpall.c
 LOCAL_STATIC_LIBRARIES := adbi ddi
-LOCAL_SHARED_LIBRARIES := libdvl libdl
+LOCAL_SHARED_LIBRARIES := pbdvm pbdl
 include $(BUILD_SHARED_LIBRARY)
 
 # aitk_dumpclass: dump info about a dvm-loaded class
@@ -91,7 +91,17 @@ LOCAL_MODULE     := aitk_dumpclass
 AITK_SRC_PATH := $(LOCAL_PATH)/aitk_dumpclass
 LOCAL_SRC_FILES  := $(AITK_SRC_PATH)/dumpclass_arm.c.arm $(AITK_SRC_PATH)/dumpclass.c
 LOCAL_STATIC_LIBRARIES := adbi ddi
-LOCAL_SHARED_LIBRARIES := libdvl libdl
+LOCAL_SHARED_LIBRARIES := pbdvm pbdl
+include $(BUILD_SHARED_LIBRARY)
+
+# aitk_send_raw_pdu: 
+#
+include $(CLEAR_VARS)
+LOCAL_MODULE     := aitk_send_raw_pdu
+AITK_SRC_PATH := $(LOCAL_PATH)/aitk_send_raw_pdu
+LOCAL_SRC_FILES  := $(AITK_SRC_PATH)/send_raw_pdu_arm.c.arm $(AITK_SRC_PATH)/send_raw_pdu.c
+LOCAL_STATIC_LIBRARIES := adbi ddi
+LOCAL_SHARED_LIBRARIES := pbdvm pbdl
 include $(BUILD_SHARED_LIBRARY)
 
 
