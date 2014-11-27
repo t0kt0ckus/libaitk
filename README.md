@@ -1,4 +1,4 @@
 aitk
 ====
 
-Android instrumentation tool kit. A simple usability cleanup around crmulliner's adbi/ddi.
+Android instrumentation tool kit. Experiment around crmulliner's adbi/ddi.
