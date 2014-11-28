@@ -10,7 +10,6 @@ import com.android.internal.telephony.SmsHeader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
 import static com.android.internal.telephony.SmsConstants.ENCODING_16BIT;
 import static com.android.internal.telephony.SmsConstants.ENCODING_7BIT;
@@ -19,9 +18,6 @@ import static com.android.internal.telephony.SmsConstants.MAX_USER_DATA_BYTES;
 import static com.android.internal.telephony.SmsConstants.MAX_USER_DATA_BYTES_WITH_HEADER;
 import static com.android.internal.telephony.SmsConstants.MAX_USER_DATA_SEPTETS;
 
-/**
- * Created by chris on 27/11/14.
- */
 public class SubmitPduFactory {
 
     /**
@@ -42,8 +38,6 @@ public class SubmitPduFactory {
         int encoding = ENCODING_UNKNOWN;
         int languageTable = 0;
         int languageShiftTable = 0;
-
-        Log.d(TAG, "getSubmitPdu()");
 
         // Perform null parameter checks.
         if (message == null || destinationAddress == null) {
@@ -251,10 +245,14 @@ public class SubmitPduFactory {
         bo.write(daBytes, 0, daBytes.length);
 
         // TP-Protocol-Identifier
+        //
+        // instead of 0
         // bo.write(0);
-        bo.write(0x40); // Type 0 - SMS ?
+        //
+        bo.write(0x40); // we set it to Type 0 - SilentSMS
+
         return bo;
     }
 
-    private static final String TAG = "AITK_SEND_RAW_PDU";
+    private static final String TAG = "AITG_GSM";
 }

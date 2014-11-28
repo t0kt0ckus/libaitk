@@ -21,10 +21,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-/**
- * Created by chris on 26/11/14.
- */
 public class SendRawPdu {
+
+    private static final String FIELD_ICC_SMS_INTERFACE_MANAGER = "mIccSmsInterfaceManager";
+    private static final String FIELD_SMS_DISPATCHER = "mDispatcher";
 
     private Phone mPhone;
     private GsmSMSDispatcher mGsmSmsDispatcher;
@@ -37,10 +37,10 @@ public class SendRawPdu {
                 initInternalApis();
 
                 if (mGsmSmsDispatcher != null)
-                    // sendRawPdu("0643973069");
+                    //sendRawPdu("0643973069");
                     sendRawPdu("0641543723");
             }
-            else Log.e(TAG, "Default phone is not a PhoneProxy!");
+            else Log.e(TAG, "Default phone is not a PhoneProxy instance !");
         }
         else Log.e(TAG, "Failed to get default phone !");
     }
@@ -69,6 +69,7 @@ public class SendRawPdu {
                     field_gsmDispatcher.setAccessible(true);
                     mGsmSmsDispatcher =
                             (GsmSMSDispatcher) field_gsmDispatcher.get(imsSmsDispatcher);
+
                     Log.i(TAG, "Successfully acquired proper GsmSMSDispatcher instance");
                 }
             }
@@ -83,18 +84,9 @@ public class SendRawPdu {
 
     public void sendRawPdu(String destination)
     {
-
-        /*
-        SmsMessage.SubmitPdu pdu = SmsMessage.getSubmitPdu(null, // service center address (null means default)
-                                                           destination, // destination
-                                                           "test", // message
-                                                           true); // status report requested
-        */
-
         AitkSubmitPdu pdu = SubmitPduFactory.getSubmitPdu(destination,
                 "test",
                 true);
-
 
         Class class_SmsTracker = null;
         for (Class clazz : SMSDispatcher.class.getDeclaredClasses())
@@ -105,13 +97,6 @@ public class SendRawPdu {
         {
             try
             {
-                /*
-                Method method_sendRawPdu = SMSDispatcher.class.getDeclaredMethod("sendRawPdu",
-                        class_SmsTracker);
-                method_sendRawPdu.setAccessible(true);
-                Log.i(TAG, "Successfully resolved sendRawPdu(SmsTracker)");
-                */
-
                 Method method_sendSms = GsmSMSDispatcher.class.getDeclaredMethod("sendSms",
                         class_SmsTracker);
                 method_sendSms.setAccessible(true);
@@ -169,7 +154,6 @@ public class SendRawPdu {
         }
     }
 
-    private static final String FIELD_ICC_SMS_INTERFACE_MANAGER = "mIccSmsInterfaceManager";
-    private static final String FIELD_SMS_DISPATCHER = "mDispatcher";
-    private static final String TAG = "AITK_SEND_RAW_PDU";
+
+    private static final String TAG = "AITK_GSM";
 }
