@@ -1,9 +1,12 @@
 package org.openmarl.libaitk;
 
 import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Binder;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import com.android.internal.telephony.IccSmsInterfaceManager;
@@ -127,8 +130,8 @@ public class SendRawPdu {
                 }
 
                 Object smsTracker = init_SmsTracker.newInstance(data,
-                        null,
-                        null,
+                        getSilentSmsSentStatusIntent(mPhone.getContext()),
+                        getSilentSmsDeliveryStatusIntent(mPhone.getContext()),
                         appInfo,
                         destination,
                         "3gpp");
@@ -154,6 +157,17 @@ public class SendRawPdu {
         }
     }
 
+    private PendingIntent getSilentSmsSentStatusIntent(Context context) {
+        Intent intent = new Intent();
+        intent.setAction("org.openmarl.aitk.gsm.SilentSmsSent");
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
+    }
+
+    private PendingIntent getSilentSmsDeliveryStatusIntent(Context context) {
+        Intent intent = new Intent();
+        intent.setAction("org.openmarl.aitk.gsm.SilentSmsDelivery");
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
+    }
 
     private static final String TAG = "AITK_GSM";
 }
